@@ -1,0 +1,17 @@
+{
+  "name": "gestion-budget-api",
+  "version": "1.0.0",
+  "description": "API pour le projet l'application de la gestion de la gestion de budget",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js --watch",
+    "test": "jest "
+  },
+  "author": "Oumar Kane",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.3"
+  }
+}
