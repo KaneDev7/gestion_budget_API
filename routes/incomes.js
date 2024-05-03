@@ -1,5 +1,5 @@
 const express = require("express")
-
+const incomeShema = require('../models/incomes')
 
 const router = express.Router()
 

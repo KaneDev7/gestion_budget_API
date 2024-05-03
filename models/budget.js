@@ -1,4 +1,4 @@
-const { Schema, Types} = require('mongoose')
+const { Schema} = require('mongoose')
 
 
 const budgetShema = new Schema({
@@ -9,4 +9,4 @@ const budgetShema = new Schema({
 })
 
 
-module.exports = mongoose.model('Budget',budgetShema)
+module.exports = mongoose.model('Budget', budgetShema)
