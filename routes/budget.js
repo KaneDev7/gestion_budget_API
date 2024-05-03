@@ -1,18 +1,12 @@
 const express = require("express")
+const {getBudget, updateBudget, createBudget } = require("../controllers/budget")
 
 
 const router = express.Router()
 
-router.get('/budget', (req, res) =>{
-    const data = {
-        tittle : 'budget',
-        montant : 70000,
-    }
-    res.json(data)
-})
+router.get('/budget', getBudget)
+router.post('/budget', createBudget)
+router.put('/budget', updateBudget)
 
-router.put('/budget', (req, res) =>{
-    res.send('put budget')
-})
 
 module.exports = router

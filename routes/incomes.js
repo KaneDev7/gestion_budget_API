@@ -1,22 +1,18 @@
 const express = require("express")
-const incomeShema = require('../models/incomes')
-
 const router = express.Router()
 
-router.get('/incomes', (req, res) =>{
-    res.send('get incomes')
-})
+const {
+    getIncomes,
+    createIncomes,
+    updateIncomes,
+    deleteIncomes
+} = require("../controllers/incomes")
 
-router.post('/incomes', (req, res) =>{
-    res.send('post incomes')
-})
 
-router.put('/incomes', (req, res) =>{
-    res.send('put incomes')
-})
-
-router.delete('/incomes', (req, res) =>{
-    res.send('delete incomes')
-})
+router.get('/incomes', getIncomes)
+router.post('/income', createIncomes)
+router.put('/income', updateIncomes)
+router.delete('/income', deleteIncomes)
 
 module.exports = router
+

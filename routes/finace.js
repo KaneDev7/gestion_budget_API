@@ -1,19 +1,8 @@
 const express = require("express")
-const finaceShema = require('../models/finace')
+const { getFinances } = require("../controllers/finace")
 
 
 const router = express.Router()
 
-router.get('/finaces', async (req, res) =>{
-    try {
-        const result =  await finaceShema.findOne({}).populate('expenses') 
-         res.status(200).json(result)
-     
-        } catch (error) {
-         console.log(error)
-        }
-})
-
-
-
+router.get('/finances',getFinances )
 module.exports = router

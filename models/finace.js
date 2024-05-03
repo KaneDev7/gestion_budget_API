@@ -1,10 +1,10 @@
 const { Schema, default: mongoose } = require('mongoose')
-
-
+const expenseShema = require('./expense')
+const incomeShema = require('./incomes')
 
 
 const financeShema = new Schema({
-    totalEpense: {
+    totalExpense: {
         type: Number,
         required: true
     },
@@ -16,18 +16,9 @@ const financeShema = new Schema({
 
     solde: {
         type: Number,
-        required: true
+        required: false
     },
 
-    expenses : {
-        type : Schema.Types.ObjectId,
-        ref : 'Expense'
-    },
-
-    incomes: {
-        type : Schema.Types.ObjectId,
-        ref : 'Income'
-    }
 })
 
 module.exports = mongoose.model('Finance',financeShema)

@@ -14,5 +14,11 @@ const expenseShema = new Schema({
     }
 })
 
+// expenseShema.virtual("finaces",{
+//     ref: 'Finance',
+//     localField: '_id',
+//     foreignField: 'expenses'
+// })
+
 
 module.exports = mongoose.model('Expense',expenseShema)
