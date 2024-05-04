@@ -8,5 +8,4 @@ router.get('/budget', getBudget)
 router.post('/budget', createBudget)
 router.put('/budget', updateBudget)
 
-
 module.exports = router

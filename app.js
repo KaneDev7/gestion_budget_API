@@ -16,10 +16,12 @@ app.use(bodyParser.json())
 
 
 // routes
+app.use('/', require('./routes/auth'))
 app.use('/', require('./routes/budget'))
 app.use('/', require('./routes/finace'))
 app.use('/', require('./routes/expense'))
 app.use('/', require('./routes/incomes'))
+
 
 
 

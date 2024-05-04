@@ -1,7 +1,7 @@
 
 const incomeShema = require('../models/incomes')
 const financeShema = require('../models/finace')
-const { getTotalIncomes } = require("../utils/utils")
+const { getTotalIncomes } = require("../utils/operations")
 
 const getIncomes = async (req, res) => {
     try {
@@ -12,6 +12,7 @@ const getIncomes = async (req, res) => {
         console.log(error)
     }
 }
+
 
 const createIncomes = async (req, res) => {
     const { title, montant } = req.body
@@ -24,6 +25,7 @@ const createIncomes = async (req, res) => {
         res.status(400).json(error)
     }
 }
+
 
 const updateIncomes = async (req, res) => {
     res.send('put income')

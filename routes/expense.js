@@ -11,7 +11,7 @@ const router = express.Router()
 
 router.get('/expenses', getExpenses)
 router.post('/expense', createExpenses)
-router.put('/expenses', updateExpenses)
+router.put('/expenses/:id', updateExpenses)
 router.delete('/expenses',)
 
 module.exports = router
