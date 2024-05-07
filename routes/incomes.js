@@ -11,8 +11,8 @@ const {
 
 router.get('/incomes', getIncomes)
 router.post('/income', createIncomes)
-router.put('/income', updateIncomes)
-router.delete('/income', deleteIncomes)
+router.put('/incomes/:id', updateIncomes)
+router.delete('/incomes/:id', deleteIncomes)
 
 module.exports = router
 

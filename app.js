@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000
 // connnet db
 connectDB()
 
-// middlewares
+// middlewares 
 app.use(bodyParser.json())
 
 

@@ -9,7 +9,7 @@ const getExpenses = async (req, res) => {
         const result = await expenseShema.find({})
         const message = `expense created`
         const successResponse = APIResponse.success(result, message)
-        res.status(201).json(successResponse.toJSON())
+        res.status(200).json(successResponse.toJSON())
     } catch (error) {
         console.log(error)
         res.status(400).json(error)
@@ -30,7 +30,7 @@ const createExpenses = async (req, res) => {
         await expenseShema.create({title, montant })
         const totalExpense = await getTotalExpense()
         await financeShema.updateOne({ totalExpense })
-        const message = `expense created and totalExpense updated`
+        const message = `expense created and total expense updated`
         const successResponse = APIResponse.success({}, message)
         res.status(201).json(successResponse.toJSON())
     } catch (error) {
@@ -63,7 +63,27 @@ const updateExpenses = async (req, res) => {
 }
 
 const deleteExpenses = async (req, res) => {
-    res.send('delete expenses')
+    const {id} = req.params
+
+    if(!id){
+        const message = `cannot find id`
+        const errorResponse = APIResponse.error({}, message)
+        return res.status(400).json(errorResponse.toJSON())
+    }
+
+    try {
+        await expenseShema.findByIdAndDelete({_id: id})
+        const totalExpense = await getTotalExpense()
+        await financeShema.updateOne({ totalExpense })
+        
+        const message = `expense for id ${id} deleted and total expense updated `
+        const successResponse = APIResponse.success({}, message)
+        res.status(200).json(successResponse.toJSON())
+        
+    } catch (error) {
+        console.log(error)
+        res.status(400).json(error)
+    }
 }
 
 module.exports = {
