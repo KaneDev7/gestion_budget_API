@@ -3,12 +3,11 @@ const budgetSchema = require('../models/budget')
 const APIResponse = require('../utils/APIResponse')
 
 const getBudget = async (req, res) => {
+    const {username} = req.user
     try {
-        const result = await budgetSchema.find({})
-        const message = ``
-        const successResponse = APIResponse.success(result, message)
+        const result = await budgetSchema.find({username})
+        const successResponse = APIResponse.success(result, '')
         res.status(201).json(successResponse.toJSON())
-        res.status(201).json(result)
     } catch (error) {
         res.status(400).json(error)
     }
@@ -24,13 +23,14 @@ const createBudget = async (req, res) => {
     }
 
     try {
-        const budget = await budgetSchema.find({})
+        const budget = await budgetSchema.find({username})
 
         if (!budget.length) {
-            await budgetSchema.create({ montant })
-        } else {
-            await budgetSchema.updateOne({ montant })
+            await budgetSchema.create({ montant, username})
+        } else {    
+            await budgetSchema.findOneAndUpdate({username}, {montant})
         }
+
         const message = `budget created`
         const successResponse = APIResponse.success({}, message)
         res.status(201).json(successResponse.toJSON())

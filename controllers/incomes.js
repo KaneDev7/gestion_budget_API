@@ -5,10 +5,12 @@ const { getTotalIncomes } = require("../utils/operations")
 const APIResponse = require('../utils/APIResponse')
 
 const getIncomes = async (req, res) => {
+
+    const { username } = req.user
+    
     try {
-        const result = await incomeShema.find({})
-        const message = `income created`
-        const successResponse = APIResponse.success(result, message)
+        const result = await incomeShema.find({username})
+        const successResponse = APIResponse.success(result, '')
         res.status(200).json(successResponse.toJSON())
 
     } catch (error) {
@@ -19,7 +21,9 @@ const getIncomes = async (req, res) => {
 
 
 const createIncomes = async (req, res) => {
+
     const { title, montant } = req.body
+    const { username } = req.user
 
     if (!title || !montant) {
         const message = `title or montant can't be empty`
@@ -28,38 +32,15 @@ const createIncomes = async (req, res) => {
     }
 
     try {
-        await incomeShema.create({ title, montant })
-        const totalIncome = await getTotalIncomes()
-        await financeShema.updateOne({ totalIncome })
+        await incomeShema.create({ title, montant, username })
+        const budget = await budgetSchema.findOne({ username })
+        const totalIncome = await getTotalIncomes(username)
+        const totalExpense = await getTotalExpense(username)
+        const solde = budget.montant + (totalIncome - totalExpense)
+        await financeShema.findOneAndUpdate({username} ,{ totalIncome, solde })
 
-        const message = `income created and total income updated`
+        const message = `income created solde and total income updated`
         const successResponse = APIResponse.success({}, message)
-        res.status(201).json(successResponse.toJSON())
-        
-    } catch (error) {
-        res.status(400).json(error)
-    }
-}
-
-
-const updateIncomes = async (req, res) => {
-    const { id } = req.params
-    const { title, montant } = req.body
-
-    if (!title || !montant) {
-        const message = `title or montant can't be empty`
-        const errorResponse = APIResponse.error({}, message)
-        return res.status(400).json(errorResponse.toJSON())
-    }
-
-    try {
-        const data = await incomeShema.findByIdAndUpdate(
-            { _id: id },
-            { $set: { title, montant } },
-            { returnDocument: 'after' }
-        )
-        const message = `income for id ${data.id} income`
-        const successResponse = APIResponse.success(data, message)
         res.status(201).json(successResponse.toJSON())
 
     } catch (error) {
@@ -71,6 +52,7 @@ const updateIncomes = async (req, res) => {
 
 const deleteIncomes = async (req, res) => {
     const { id } = req.params
+    const { username } = req.user
 
     if (!id) {
         const message = `cannot find id`
@@ -79,11 +61,13 @@ const deleteIncomes = async (req, res) => {
     }
 
     try {
-        await incomeShema.findByIdAndDelete({ _id: id })
-        const totalIncome = await getTotalIncomes()
-        await financeShema.updateOne({ totalIncome })
+        await incomeShema.findOneAndDelete({username})
+        const totalIncome = await getTotalIncomes(username)
+        const totalExpense = await getTotalExpense(username)
+        const solde = budget.montant + (totalIncome - totalExpense)
+        await financeShema.findOneAndUpdate({username} ,{ totalIncome, solde })
 
-        const message = `income for id ${id} deleted and total income updated `
+        const message = `income for id ${id} deleted solde and total income updated `
         const successResponse = APIResponse.success({}, message)
         res.status(200).json(successResponse.toJSON())
 
@@ -97,6 +81,5 @@ const deleteIncomes = async (req, res) => {
 module.exports = {
     getIncomes,
     createIncomes,
-    updateIncomes,
     deleteIncomes
 }

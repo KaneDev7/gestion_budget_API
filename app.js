@@ -1,6 +1,7 @@
 const express = require('express')
 const connectDB = require('./configs/dbConn')
 const bodyParser = require('body-parser')
+const verifyToken = require('./Middlewares/verifyToken')
 
 const app = express()
 
@@ -17,6 +18,7 @@ app.use(bodyParser.json())
 
 // routes
 app.use('/', require('./routes/auth'))
+app.use(verifyToken)
 app.use('/', require('./routes/budget'))
 app.use('/', require('./routes/finace'))
 app.use('/', require('./routes/expense'))

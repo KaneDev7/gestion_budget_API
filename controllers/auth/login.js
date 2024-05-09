@@ -24,7 +24,6 @@ const connectUser = async (req, res) => {
         }
 
         const match = bcrypt.compare(findUser.password, password);
-        console.log(match)
 
         if (!match) {
             const message = `incorect username or password`
@@ -35,14 +34,12 @@ const connectUser = async (req, res) => {
         let token
 
         if (!findUser.token) {
-            console.log('new token create')
             token = jwt.sign(
                 { username },
                 process.env.JTW_SECRET
             )
             await userSchema.updateOne({ username }, {token})
         } else {
-            console.log('old token')
             token = findUser.token
         }
 

@@ -13,6 +13,10 @@ const financeShema = new Schema({
         type: Number,
         required: true
     },
+    
+    username : {
+        type : String
+    },
 
     solde: {
         type: Number,

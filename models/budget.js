@@ -5,6 +5,9 @@ const budgetShema = new Schema({
     montant: {
         type: Number,
         required: true
+    },
+    username : {
+        type : String
     }
 })
 

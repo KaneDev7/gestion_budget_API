@@ -3,29 +3,35 @@ const expenseShema = require('../models/expense')
 const incomeShema = require('../models/incomes')
 
 
-const getTotalExpense = async () => {
-
+const getTotalExpense = async (username) => {
     try {
         const result = await expenseShema.aggregate([
             {
+                $match: {username} 
+            },
+            {
                 $group: {
                     _id: null,
                     total: { $sum: "$montant" }
                 }
             }
-        ])
-        console.log('r', result[0].total)
+        ]);
         return result[0].total
+
     } catch (error) {
-        console.error(err);
+        console.error(error); 
     }
-   
 }
 
 
-const getTotalIncomes = async () => {
+
+
+const getTotalIncomes = async (username) => {
     try {
         const result = await incomeShema.aggregate([
+            {
+                $match: {username} 
+            },
             {
                 $group: {
                     _id: null,
@@ -38,6 +44,9 @@ const getTotalIncomes = async () => {
         console.error(err);
     }
 }
+
+
+
 
 module.exports = {
     getTotalExpense,

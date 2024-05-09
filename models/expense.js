@@ -11,14 +11,14 @@ const expenseShema = new Schema({
     montant: {
         type: Number,
         required: true
+    },
+    
+    username : {
+        type : String
     }
 })
 
-// expenseShema.virtual("finaces",{
-//     ref: 'Finance',
-//     localField: '_id',
-//     foreignField: 'expenses'
-// })
+
 
 
 module.exports = mongoose.model('Expense',expenseShema)
