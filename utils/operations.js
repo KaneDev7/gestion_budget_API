@@ -3,11 +3,17 @@ const expenseShema = require('../models/expense')
 const incomeShema = require('../models/incomes')
 
 
+
 const getTotalExpense = async (username) => {
+    console.log('expenses username', username)
+
     try {
+        const expenses = await expenseShema.find({ username })
+        if (expenses.length < 1) return 0
+
         const result = await expenseShema.aggregate([
             {
-                $match: {username} 
+                $match: { username }
             },
             {
                 $group: {
@@ -16,10 +22,12 @@ const getTotalExpense = async (username) => {
                 }
             }
         ]);
-        return result[0].total
+
+        console.log('total expenses', result)
+        return result.length > 0 ? result[0].total : 0;
 
     } catch (error) {
-        console.error(error); 
+        console.error(error);
     }
 }
 
@@ -27,10 +35,14 @@ const getTotalExpense = async (username) => {
 
 
 const getTotalIncomes = async (username) => {
+    console.log('incomes username', username)
     try {
+        const incomes = await incomeShema.find({ username })
+        if (incomes.length < 1 ) return 0
+
         const result = await incomeShema.aggregate([
             {
-                $match: {username} 
+                $match: { username }
             },
             {
                 $group: {
@@ -39,9 +51,10 @@ const getTotalIncomes = async (username) => {
                 }
             }
         ])
-        return result[0].total
+        console.log('incomes result', result)
+        return result.length > 0 ? result[0].total : 0;
     } catch (error) {
-        console.error(err);
+        console.error(error);
     }
 }
 

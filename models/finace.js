@@ -6,12 +6,10 @@ const incomeShema = require('./incomes')
 const financeShema = new Schema({
     totalExpense: {
         type: Number,
-        required: true
     },
 
     totalIncome: {
         type: Number,
-        required: true
     },
     
     username : {
@@ -20,7 +18,6 @@ const financeShema = new Schema({
 
     solde: {
         type: Number,
-        required: false
     },
 
 })

@@ -1,6 +1,12 @@
 const { Schema } = require('mongoose')
 const bcrypt = require('bcrypt')
 const userSchema = require('../../models/users')
+const financeShema = require('../../models/finace')
+const budgetShema = require('../../models/budget')
+const expenseShema = require('../../models/expense')
+
+
+
 const APIResponse = require('../../utils/APIResponse')
 
 const SALT_ROUNDS = 10;
@@ -25,6 +31,9 @@ const createUser = async (req, res) => {
 
         const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
         userSchema.create({ username, password: passwordHash, token : '' })
+        budgetShema.create({username, montant : 0})
+        financeShema.create({username, totalExpense:0, totalIncome:0, solde: 0})
+        
         const message = `user created`
         const successResponse = APIResponse.success({}, message)
         res.status(201).json(successResponse.toJSON())

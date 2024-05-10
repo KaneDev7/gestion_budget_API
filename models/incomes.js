@@ -9,13 +9,12 @@ const incomeShema = new Schema({
 
     montant: {
         type: Number,
-        required: true
+        required: true,
     },
     
     username : {
         type : String,
     }
 })
-
 
 module.exports = mongoose.model('Income',incomeShema)

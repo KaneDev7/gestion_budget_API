@@ -15,6 +15,7 @@ const getBudget = async (req, res) => {
 
 const createBudget = async (req, res) => {
     const { montant } = req.body
+    const {username} = req.user
 
     if (!montant) {
         const message = `montant can't be empty`
@@ -23,21 +24,14 @@ const createBudget = async (req, res) => {
     }
 
     try {
-        const budget = await budgetSchema.find({username})
-
-        if (!budget.length) {
-            await budgetSchema.create({ montant, username})
-        } else {    
-            await budgetSchema.findOneAndUpdate({username}, {montant})
-        }
-
-        const message = `budget created`
+        await budgetSchema.findOneAndUpdate({username}, {montant})
+        const message = `budget updated`
         const successResponse = APIResponse.success({}, message)
         res.status(201).json(successResponse.toJSON())
 
     } catch (error) {
-        const message = `montant can't be empty`
-        const errorResponse = APIResponse.error({}, message)
+        console.log(error)
+        const errorResponse = APIResponse.error(error, '')
         return res.status(400).json(errorResponse.toJSON())
     }
 }

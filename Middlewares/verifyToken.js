@@ -7,7 +7,12 @@ const verifyToken = async (req, res, next) => {
     let errorToken = {}
     try {
         jwt.verify(token, process.env.JTW_SECRET, (error, decoded) => {
-            errorToken = error
+            if (error) {
+                errorToken = error
+                const errorResponse = APIResponse.error(errorToken, {})
+                return res.status(400).json(errorResponse.toJSON())
+            }
+            
             req.user = { username: decoded.username }
             next()
 
