@@ -2,12 +2,13 @@ const express = require('express')
 const connectDB = require('./configs/dbConn')
 const bodyParser = require('body-parser')
 const verifyToken = require('./Middlewares/verifyToken')
+const log = require('./Middlewares/log')
 
 const app = express()
 
 require('dotenv').config()
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3001
  
 // connnet db
 connectDB()
@@ -15,9 +16,11 @@ connectDB()
 // middlewares 
 app.use(bodyParser.json())
 
+ 
+app.use(log)
 
 // routes
-app.use('/', require('./routes/auth'))
+app.use('/', require('./routes/auth'))  
 app.use(verifyToken)
 app.use('/', require('./routes/budget'))
 app.use('/', require('./routes/finace'))

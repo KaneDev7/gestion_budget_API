@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const userSchema = require('../../models/users')
 const APIResponse = require('../../utils/APIResponse')
+const log = require('../../Middlewares/log')
+const logUser = require('../../utils/logUser')
 
 
 const connectUser = async (req, res) => {
@@ -47,6 +49,7 @@ const connectUser = async (req, res) => {
         const message = `connected`
         const successResponse = APIResponse.success(data, message)
         res.status(201).json(successResponse.toJSON())
+        logUser(username)
 
     } catch (error) {
         console.log(error)
