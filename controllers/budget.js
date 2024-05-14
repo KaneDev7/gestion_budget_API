@@ -1,11 +1,14 @@
 const { Schema } = require('mongoose')
 const budgetSchema = require('../models/budget')
+const financeShema = require('../models/finace')
+
 const APIResponse = require('../utils/APIResponse')
+const { getTotalExpense, getTotalIncomes } = require('../utils/operations')
 
 const getBudget = async (req, res) => {
-    const {username} = req.user
+    const { username } = req.user
     try {
-        const result = await budgetSchema.find({username})
+        const result = await budgetSchema.find({ username })
         const successResponse = APIResponse.success(result, '')
         res.status(201).json(successResponse.toJSON())
     } catch (error) {
@@ -15,7 +18,7 @@ const getBudget = async (req, res) => {
 
 const createBudget = async (req, res) => {
     const { montant } = req.body
-    const {username} = req.user
+    const { username } = req.user
 
     if (!montant) {
         const message = `montant can't be empty`
@@ -24,8 +27,18 @@ const createBudget = async (req, res) => {
     }
 
     try {
-        await budgetSchema.findOneAndUpdate({username}, {montant})
-        const message = `budget updated`
+
+        const totalExpense = await getTotalExpense(username)
+        const totalIncome = await getTotalIncomes(username)
+
+        await budgetSchema.findOneAndUpdate({ username }, {
+            montant: montant - totalExpense
+        })
+
+        const solde = (montant - totalExpense) + (totalIncome - totalExpense)
+        await financeShema.findOneAndUpdate({ username }, { solde })
+
+        const message = `budget and solde updated`
         const successResponse = APIResponse.success({}, message)
         res.status(201).json(successResponse.toJSON())
 

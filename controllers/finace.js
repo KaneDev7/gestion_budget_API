@@ -1,5 +1,5 @@
 const financeShema = require('../models/finace')
-const { getTotalIncomes, getTotalExpense } = require('../utils/operations')
+const APIResponse = require('../utils/APIResponse')
 
 
 const getFinances = async (req, res) => {

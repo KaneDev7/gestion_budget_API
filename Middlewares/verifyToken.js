@@ -21,10 +21,8 @@ const verifyToken = async (req, res, next) => {
 
      const  invalidTokenDoc = await tokenSchema.findOne({tokenID})
 
-     console.log(invalidTokenDoc)
      if(invalidTokenDoc){
         const invalidTokenArr =  invalidTokenDoc.invalidToken
-        console.log('invalidToken',invalidTokenArr)
 
         if(invalidTokenArr.includes(token)){
             errorToken = 'token invalid'

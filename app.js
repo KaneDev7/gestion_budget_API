@@ -22,6 +22,8 @@ app.use(log)
 // routes
 app.use('/', require('./routes/auth'))  
 app.use(verifyToken)
+app.use('/', require('./routes/token'))
+app.use('/', require('./routes/user'))
 app.use('/', require('./routes/budget'))
 app.use('/', require('./routes/finace'))
 app.use('/', require('./routes/expense'))

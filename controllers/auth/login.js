@@ -7,6 +7,9 @@ const log = require('../../Middlewares/log')
 const logUser = require('../../utils/logUser')
 
 
+const ivalidTokenTiime = 6 * 30 * 24 * 60 * 60 * 1000 // 6 mois
+
+
 const connectUser = async (req, res) => {
     const { username, password } = req.body
 
@@ -25,31 +28,39 @@ const connectUser = async (req, res) => {
             return res.status(400).json(errorResponse.toJSON())
         }
 
-        const match = bcrypt.compare(findUser.password, password);
+        bcrypt.compare(password,findUser.password, async (error, match) =>{
 
-        if (!match) {
-            const message = `incorect username or password`
-            const errorResponse = APIResponse.error({}, message)
-            return res.status(400).json(errorResponse.toJSON())
-        }
+            if(error){
+                console.log(error)
+            }
+            if (!match) {
+                const message = `incorect username or password`
+                const errorResponse = APIResponse.error({}, message)
+                return res.status(400).json(errorResponse.toJSON())
+            }
 
-        let token
+            let token
 
-        if (!findUser.token) {
-            token = jwt.sign(
-                { username },
-                process.env.JTW_SECRET
-            )
-            await userSchema.updateOne({ username }, {token})
-        } else {
-            token = findUser.token
-        }
+            if (!findUser.token) {
+                token = jwt.sign(
+                    { username },
+                    process.env.JTW_SECRET,
+                    {expiresIn : ivalidTokenTiime}
+                )
+                await userSchema.updateOne({ username }, {token})
+            } else {
+                token = findUser.token
+            }
+    
+            const data = { token }
+            const message = `connected`
+            const successResponse = APIResponse.success(data, message)
+            res.status(201).json(successResponse.toJSON())
+            logUser(username)
+        })
 
-        const data = { token }
-        const message = `connected`
-        const successResponse = APIResponse.success(data, message)
-        res.status(201).json(successResponse.toJSON())
-        logUser(username)
+
+
 
     } catch (error) {
         console.log(error)

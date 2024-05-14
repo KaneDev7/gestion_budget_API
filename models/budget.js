@@ -10,6 +10,7 @@ const budgetShema = new Schema({
     username : {
         type : String
     }
+    
 })
 
 

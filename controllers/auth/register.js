@@ -8,8 +8,8 @@ const expenseShema = require('../../models/expense')
 
 
 const APIResponse = require('../../utils/APIResponse')
+const { SALT_ROUNDS } = require('../../constants/constants')
 
-const SALT_ROUNDS = 10;
 
 const createUser = async (req, res) => {
     const { username, password } = req.body

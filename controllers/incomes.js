@@ -15,7 +15,7 @@ const getIncomes = async (req, res) => {
         if(result.length < 1){
             const message = `no data find in your incomes`
             const successResponse = APIResponse.success({}, message)
-            return res.status(204).json(successResponse.toJSON())
+            return res.status(200).json(successResponse.toJSON())
         }
 
         const successResponse = APIResponse.success(result, '')
