@@ -1,6 +1,6 @@
 const { Schema } = require('mongoose')
-const budgetSchema = require('../models/budget')
-const financeShema = require('../models/finace')
+const budgetSchema = require('../models/budget.model')
+const financeShema = require('../models/finance.model')
 
 const APIResponse = require('../utils/APIResponse')
 const { getTotalExpense, getTotalIncomes } = require('../utils/operations')

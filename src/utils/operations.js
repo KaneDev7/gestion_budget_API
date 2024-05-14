@@ -1,6 +1,6 @@
 
-const expenseShema = require('../models/expense')
-const incomeShema = require('../models/incomes')
+const expenseShema = require('../models/expense.model')
+const incomeShema = require('../models/incomes.model')
 
 
 

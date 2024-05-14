@@ -1,5 +1,5 @@
-const userSchema = require('../../models/users')
-const tokenSchema = require('../../models/token')
+const userSchema = require('../../models/users.model')
+const tokenSchema = require('../../models/token.model')
 const APIResponse = require('../../utils/APIResponse')
 const jwt = require('jsonwebtoken')
 

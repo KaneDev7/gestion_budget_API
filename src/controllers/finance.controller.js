@@ -1,4 +1,4 @@
-const financeShema = require('../models/finace')
+const financeShema = require('../models/finance.model')
 const APIResponse = require('../utils/APIResponse')
 
 
@@ -17,5 +17,4 @@ const getFinances = async (req, res) => {
 }
 
 
-
-module.exports = { getFinances  }
+module.exports = { getFinances}

@@ -1,7 +1,7 @@
 
 const jwt = require('jsonwebtoken')
 const APIResponse = require('../utils/APIResponse')
-const tokenSchema =  require('../models/token')
+const tokenSchema =  require('../models/token.model')
 
 const tokenID = 'token_id'
 

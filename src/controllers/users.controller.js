@@ -1,4 +1,4 @@
-const userSchema = require('../models/users')
+const userSchema = require('../models/users.model')
 const bcrypt = require('bcrypt')
 const APIResponse = require('../utils/APIResponse')
 const { SALT_ROUNDS } = require('../constants/constants')

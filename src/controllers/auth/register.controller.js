@@ -1,9 +1,9 @@
 const { Schema } = require('mongoose')
 const bcrypt = require('bcrypt')
-const userSchema = require('../../models/users')
-const financeShema = require('../../models/finace')
-const budgetShema = require('../../models/budget')
-const expenseShema = require('../../models/expense')
+const userSchema = require('../../models/users.model')
+const financeShema = require('../../models/finance.model')
+const budgetShema = require('../../models/budget.model')
+const expenseShema = require('../../models/expense.model')
 
 
 

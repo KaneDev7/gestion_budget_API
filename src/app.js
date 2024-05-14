@@ -1,5 +1,5 @@
 const express = require('express')
-const connectDB = require('./configs/dbConn')
+const connectDB = require('../configs/dbConn')
 const bodyParser = require('body-parser')
 const verifyToken = require('./Middlewares/verifyToken')
 const log = require('./Middlewares/log')
@@ -20,16 +20,14 @@ app.use(bodyParser.json())
 app.use(log)
 
 // routes
-app.use('/', require('./routes/auth'))  
+app.use('/', require('./routes/auth.route'))  
 app.use(verifyToken)
-app.use('/', require('./routes/token'))
-app.use('/', require('./routes/user'))
-app.use('/', require('./routes/budget'))
-app.use('/', require('./routes/finace'))
-app.use('/', require('./routes/expense'))
-app.use('/', require('./routes/incomes'))
-
-
+app.use('/', require('./routes/token.route'))
+app.use('/', require('./routes/user.route'))
+app.use('/', require('./routes/budget.route'))
+app.use('/', require('./routes/finance.route'))
+app.use('/', require('./routes/expense.route'))
+app.use('/', require('./routes/incomes.route'))
 
 
 app.listen(PORT, () =>{

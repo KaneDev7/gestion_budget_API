@@ -1,7 +1,7 @@
 const { Schema } = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const userSchema = require('../../models/users')
+const userSchema = require('../../models/users.model')
 const APIResponse = require('../../utils/APIResponse')
 const log = require('../../Middlewares/log')
 const logUser = require('../../utils/logUser')

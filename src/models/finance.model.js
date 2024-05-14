@@ -1,7 +1,4 @@
 const { Schema, default: mongoose } = require('mongoose')
-const expenseShema = require('./expense')
-const incomeShema = require('./incomes')
-
 
 const financeShema = new Schema({
     totalExpense: {

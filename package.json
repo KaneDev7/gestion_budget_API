@@ -4,7 +4,7 @@
   "description": "API pour le projet l'application de la gestion de la gestion de budget",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app.js --watch",
+    "dev": "nodemon src/app.js --watch",
     "test": "jest --watch"
   },
   "author": "Oumar Kane",

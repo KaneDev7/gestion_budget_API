@@ -1,19 +1,19 @@
 
-const expenseShema = require('../models/expense')
-const financeShema = require('../models/finace')
-const budgetSchema = require('../models/budget')
+const incomeShema = require('../models/incomes.model')
+const financeShema = require('../models/finance.model')
+const budgetSchema = require('../models/budget.model')
 
+const { getTotalIncomes, getTotalExpense } = require("../utils/operations")
 const APIResponse = require('../utils/APIResponse')
-const { getTotalExpense, getTotalIncomes } = require("../utils/operations")
 
-const getExpenses = async (req, res) => {
+const getIncomes = async (req, res) => {
+
     const { username } = req.user
-
     try {
-        const result = await expenseShema.find({username})
-        
+        const result = await incomeShema.find({username})
+
         if(result.length < 1){
-            const message = `no data find in your expenses`
+            const message = `no data find in your incomes`
             const successResponse = APIResponse.success({}, message)
             return res.status(200).json(successResponse.toJSON())
         }
@@ -28,7 +28,7 @@ const getExpenses = async (req, res) => {
 }
 
 
-const createExpenses = async (req, res) => {
+const createIncomes = async (req, res) => {
 
     const { title, montant } = req.body
     const { username } = req.user
@@ -40,19 +40,18 @@ const createExpenses = async (req, res) => {
     }
 
     try {
-        await expenseShema.create({title, montant, username })
+        await incomeShema.create({ title, montant, username })
         const budget = await budgetSchema.findOne({ username })
-        const totalExpense = await getTotalExpense(username)
         const totalIncome = await getTotalIncomes(username)
+        const totalExpense = await getTotalExpense(username)
 
         const solde = budget.montant + (totalIncome - totalExpense)
-        const bdgetUpdate =  budget.montant - totalExpense 
-        await financeShema.findOneAndUpdate({username} ,{ totalExpense, solde })
-        await budgetSchema.findOneAndUpdate({username} ,{ montant: bdgetUpdate })
+        await financeShema.findOneAndUpdate({username} ,{ totalIncome, solde })
 
-        const message = `expense created, budget, solde and total expense updated`
+        const message = `income created solde and total income updated`
         const successResponse = APIResponse.success({}, message)
-        res.status(201).json(successResponse.toJSON())
+       return res.status(201).json(successResponse.toJSON())
+
     } catch (error) {
         console.log(error)
         res.status(400).json(error)
@@ -61,46 +60,44 @@ const createExpenses = async (req, res) => {
 
 
 
-const deleteExpenses = async (req, res) => {
-    const {id} = req.params
+const deleteIncomes = async (req, res) => {
+    const { id } = req.params
     const { username } = req.user
 
-    if(!id){
+    if (!id) {
         const message = `cannot find id`
         const errorResponse = APIResponse.error({}, message)
         return res.status(400).json(errorResponse.toJSON())
     }
 
     try {
-        const findExpenses = await expenseShema.find({username})
+        const findIncomes = await incomeShema.find({username})
         
-        if(findExpenses.length > 0){
-            const message = `no data find in your expenses`
+        if(findIncomes.length > 0){
+            const message = `no data find in your incomes`
             const successResponse = APIResponse.success({}, message)
             return res.status(204).json(successResponse.toJSON())
         }
 
-        await expenseShema.findOneAndDelete({username})
-        const budget = await budgetSchema.findOne({ username })
+        await incomeShema.findOneAndDelete({username})
         const totalIncome = await getTotalIncomes(username)
         const totalExpense = await getTotalExpense(username)
         const solde = budget.montant + (totalIncome - totalExpense)
-        await financeShema.findOneAndUpdate({username} ,{ totalExpense, solde })
-        await budgetSchema.findOneAndUpdate({username} ,{ montant: budget.montant - totalExpense })
+        await financeShema.findOneAndUpdate({username} ,{ totalIncome, solde })
 
-        
-        const message = `expense for id ${id} deleted solde and total expense updated `
+        const message = `income for id ${id} deleted solde and total income updated `
         const successResponse = APIResponse.success({}, message)
         res.status(200).json(successResponse.toJSON())
-        
+
     } catch (error) {
         console.log(error)
         res.status(400).json(error)
     }
 }
 
+
 module.exports = {
-    getExpenses,
-    createExpenses,
-    deleteExpenses,
+    getIncomes,
+    createIncomes,
+    deleteIncomes
 }
