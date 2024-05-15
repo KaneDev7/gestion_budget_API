@@ -32,6 +32,12 @@ app.use('/', require('./routes/expense.route'))
 app.use('/', require('./routes/incomes.route'))
 
 
+// not found rout
+app.use((req, res) => {res.status(404).json({ message: 'Not found' });});
+
+
 app.listen(PORT, () =>{
     console.log(`server run in port ${PORT}`)
 })
+
+

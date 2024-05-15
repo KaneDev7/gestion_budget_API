@@ -3,8 +3,6 @@ const bcrypt = require('bcrypt')
 const userSchema = require('../../models/users.model')
 const financeShema = require('../../models/finance.model')
 const budgetShema = require('../../models/budget.model')
-const expenseShema = require('../../models/expense.model')
-
 
 
 const APIResponse = require('../../utils/APIResponse')
@@ -24,7 +22,7 @@ const createUser = async (req, res) => {
         const findUser = await userSchema.find({username})
 
         if(findUser.length > 0){
-            const message = `username already taken`
+            const message = `username already exist`
             const errorResponse = APIResponse.error({}, message)
             return res.status(400).json(errorResponse.toJSON())
         }
@@ -39,6 +37,7 @@ const createUser = async (req, res) => {
         res.status(201).json(successResponse.toJSON())
 
     } catch (error) {
+        console.log(error)
         res.status(400).json(error)
     }
 }

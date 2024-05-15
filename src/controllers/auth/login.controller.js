@@ -44,7 +44,7 @@ const connectUser = async (req, res) => {
                 token = jwt.sign(
                     { username },
                     process.env.JTW_SECRET,
-                    {expiresIn : ivalidTokenTiime}
+                    {expiresIn : INVALID_TOKEN_TIME}
                 )
                 await userSchema.updateOne({ username }, {token})
             } else {
@@ -55,7 +55,7 @@ const connectUser = async (req, res) => {
             const message = `connected`
             const successResponse = APIResponse.success(data, message)
             res.cookie('jwt', token, { maxAge: INVALID_TOKEN_TIME, httpOnly: true});
-            res.status(201).json(successResponse.toJSON())
+            res.status(200).json(successResponse.toJSON())
             logUser(username)
         })
 

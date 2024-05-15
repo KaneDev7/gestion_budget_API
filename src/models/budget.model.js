@@ -7,11 +7,15 @@ const budgetShema = new Schema({
         type: Number,
         required: true
     },
+
     username : {
         type : String
+    },
+    data : {
+        type : Date,
+        default : new Date().toDateString()
     }
-    
-})
+},)
 
 
 module.exports = mongoose.model('Budget', budgetShema)

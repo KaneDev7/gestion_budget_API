@@ -7,10 +7,27 @@ const { getTotalIncomes, getTotalExpense } = require("../utils/operations")
 const APIResponse = require('../utils/APIResponse')
 
 const getIncomes = async (req, res) => {
-
     const { username } = req.user
+    const {limit, page, gt, lt} = req.query
+   
+    let result
+
     try {
-        const result = await incomeShema.find({username})
+
+        if (gt && lt) {
+            result = await incomeShema.find({ username })
+                .gt('montant', gt)
+                .lt('montant', lt)
+        } else if (gt && !lt) {
+            result = await incomeShema.find({ username })
+                .gt('montant', gt)
+        } else if (!gt && lt) {
+            result = await incomeShema.find({ username })
+                .lt('montant', lt)
+        } else {
+            result = await incomeShema.find({ username })
+                .skip(page).limit(limit)
+        }
 
         if(result.length < 1){
             const message = `no data find in your incomes`
