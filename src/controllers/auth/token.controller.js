@@ -2,12 +2,13 @@ const userSchema = require('../../models/users.model')
 const tokenSchema = require('../../models/token.model')
 const APIResponse = require('../../utils/APIResponse')
 const jwt = require('jsonwebtoken')
+const { INVALID_TOKEN_TIME } = require('../../constants/constants')
+const { setTokenToInvalidsTokens } = require('../../utils/token')
 
-const tokenID = 'token_id'
-const ivalidTokenTiime = 6 * 30 * 24 * 60 * 60 * 1000 // 6 mois
 
 const generateNewToken = async (req, res) => {
-    const token = req.headers.authorization.split(' ')[1]
+
+    const token = req.headers.authorization?.split(' ')[1] ?? req?.cookies?.jwt
     const { username } = req.user
 
     if (!token) {
@@ -15,25 +16,22 @@ const generateNewToken = async (req, res) => {
         return res.status(400).json(errorResponse.toJSON())
     }
 
-    await tokenSchema.findOneAndUpdate({ tokenID },
-        { $addToSet: { invalidToken: token } },
-        { new: true, upsert: true }
-    )
-
-
+    await setTokenToInvalidsTokens(token)
+    
     try {
         const token = jwt.sign(
             { username },
             process.env.JTW_SECRET,
-            { expiresIn: ivalidTokenTiime }
+            { expiresIn: INVALID_TOKEN_TIME }
         )
 
         await userSchema.findOneAndUpdate({ username }, { token })
 
-        const data = { token }
-        const message = `A new token is generated for ${username}`
+        const data = { username, token }
+        const message = `New token is generated`
         const successResponse = APIResponse.success(data, message)
-        res.status(201).json(successResponse.toJSON())
+        res.cookie('jwt', token, { maxAge: INVALID_TOKEN_TIME, httpOnly: true });
+        res.status(200).json(successResponse.toJSON())
 
     } catch (error) {
         console.log(error)
@@ -47,7 +45,6 @@ const getToken = async (req, res) => {
 
     try {
         const findUserToken = await userSchema.findOne({ username }, { token: 1, _id: 0 })
-        console.log('findUserToken', findUserToken  )
         const successResponse = APIResponse.success(findUserToken, '')
         res.status(201).json(successResponse.toJSON())
 

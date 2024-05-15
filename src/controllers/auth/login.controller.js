@@ -5,9 +5,7 @@ const userSchema = require('../../models/users.model')
 const APIResponse = require('../../utils/APIResponse')
 const log = require('../../Middlewares/log')
 const logUser = require('../../utils/logUser')
-
-
-const ivalidTokenTiime = 6 * 30 * 24 * 60 * 60 * 1000 // 6 mois
+const { INVALID_TOKEN_TIME } = require('../../constants/constants')
 
 
 const connectUser = async (req, res) => {
@@ -33,6 +31,7 @@ const connectUser = async (req, res) => {
             if(error){
                 console.log(error)
             }
+
             if (!match) {
                 const message = `incorect username or password`
                 const errorResponse = APIResponse.error({}, message)
@@ -52,15 +51,13 @@ const connectUser = async (req, res) => {
                 token = findUser.token
             }
     
-            const data = { token }
+            const data = { username, token }
             const message = `connected`
             const successResponse = APIResponse.success(data, message)
+            res.cookie('jwt', token, { maxAge: INVALID_TOKEN_TIME, httpOnly: true});
             res.status(201).json(successResponse.toJSON())
             logUser(username)
         })
-
-
-
 
     } catch (error) {
         console.log(error)

@@ -4,7 +4,6 @@ const APIResponse = require('../utils/APIResponse')
 
 const getFinances = async (req, res) => {
     const { username } = req.user
-
     try {
         const result = await financeShema.find({username})
         const successResponse = APIResponse.success(result, '')

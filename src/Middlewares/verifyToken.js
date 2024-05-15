@@ -9,9 +9,8 @@ const tokenID = 'token_id'
 const verifyToken = async (req, res, next) => {
     if(req.url === '/auth') next()
 
+    const token = req.headers.authorization?.split(' ')[1] ?? req?.cookies?.jwt
     let errorToken = null
-    
-    const token = req.headers.authorization.split(' ')[1]
 
     if(!token){
         errorToken = 'token invalid'

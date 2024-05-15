@@ -8,9 +8,10 @@ const { getTotalExpense, getTotalIncomes } = require("../utils/operations")
 
 const getExpenses = async (req, res) => {
     const { username } = req.user
+    console.log(req.query)
 
     try {
-        const result = await expenseShema.find({username})
+        const result = await expenseShema.find({username}).limit(2)
         
         if(result.length < 1){
             const message = `no data find in your expenses`

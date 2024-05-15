@@ -1,5 +1,6 @@
 const express = require('express')
 const connectDB = require('../configs/dbConn')
+const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const verifyToken = require('./Middlewares/verifyToken')
 const log = require('./Middlewares/log')
@@ -15,6 +16,7 @@ connectDB()
 
 // middlewares 
 app.use(bodyParser.json())
+app.use(cookieParser())
 
  
 app.use(log)
