@@ -10,6 +10,11 @@ const tokenSchema = new Schema({
     invalidToken: {
         type: [String]
     },
+
+    createdAt: {
+        type: Date,
+        default: Date.now 
+    },
 },)
 
 

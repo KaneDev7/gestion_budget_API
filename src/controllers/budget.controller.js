@@ -8,11 +8,15 @@ const { getTotalExpense, getTotalIncomes } = require('../utils/operations')
 const getBudget = async (req, res) => {
     const { username } = req.user
     try {
-        const result = await budgetSchema.find({ username })
+        const result = await budgetSchema.find({ username }, {username: 0})
         const successResponse = APIResponse.success(result, '')
         res.status(201).json(successResponse.toJSON())
+        
     } catch (error) {
-        res.status(400).json(error)
+        console.log(error)
+        const errorMessage = `Something went wrong: ${error.message}` // Capture de l'erreur
+        const errorResponse = APIResponse.error({}, errorMessage)
+        return res.status(500).json(errorResponse.toJSON())
     }
 }
 
@@ -44,8 +48,9 @@ const createBudget = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        const errorResponse = APIResponse.error(error, '')
-        return res.status(400).json(errorResponse.toJSON())
+        const errorMessage = `Something went wrong: ${error.message}` // Capture de l'erreur
+        const errorResponse = APIResponse.error({}, errorMessage)
+        return res.status(500).json(errorResponse.toJSON())
     }
 }
 

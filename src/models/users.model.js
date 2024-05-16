@@ -11,12 +11,18 @@ const userShema = new Schema({
 
     password: {
         type: String,
-        require: true
+        require: true,
     },
     
     token: {
         type: String,
     },
+
+    createdAt: {
+        type: Date,
+        default: Date.now 
+    },
+
 })
 
 

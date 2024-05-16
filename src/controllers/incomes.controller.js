@@ -5,48 +5,84 @@ const budgetSchema = require('../models/budget.model')
 
 const { getTotalIncomes, getTotalExpense } = require("../utils/operations")
 const APIResponse = require('../utils/APIResponse')
+const { PAGE_LIMIT } = require('../constants/constants')
+
+
+
+// ------------HELPER-----------
+
+const findIncomesByFilterAndSort = async ({ limit, page, gt, lt, sort }, username) => {
+
+    if (!username) return
+    const projection = {montant: 1 , title : 1}
+    let result
+
+    if (gt && lt) {
+        result = await incomeShema.find({ username })
+            .gt('montant', gt)
+            .lt('montant', lt)
+            .sort(sort && { montant: sort })
+            .select(projection)
+    } else if (gt && !lt) {
+        result = await incomeShema.find({ username })
+            .gt('montant', gt)
+            .sort(sort && { montant: sort })
+            .select(projection)
+
+    } else if (!gt && lt) {
+        result = await incomeShema.find({ username })
+            .lt('montant', lt)
+            .sort(sort && { montant: sort })
+            .select(projection)
+
+    } else {
+        result = await incomeShema.find({ username })
+            .skip(parseFloat(page) - 1)
+            .limit(limit || PAGE_LIMIT)
+            .sort(sort && { montant: sort })
+            .select(projection)
+    }
+
+    return result
+}
+
+
+const updateFinanceAfterIncomeChanged = async (username) => {
+    if (!username) return
+    const budget = await budgetSchema.findOne({ username })
+    const totalIncome = await getTotalIncomes(username)
+    const totalExpense = await getTotalExpense(username)
+    const solde = budget.montant + (totalIncome - totalExpense)
+    await financeShema.findOneAndUpdate({ username }, { totalIncome, solde })
+}
+
+
+
+// ------------CONTROLLERS FONCTION-----------
 
 const getIncomes = async (req, res) => {
     const { username } = req.user
-    const {limit, page, gt, lt} = req.query
-   
-    let result
 
     try {
+        const result = await findIncomesByFilterAndSort(req.query, username)
 
-        if (gt && lt) {
-            result = await incomeShema.find({ username })
-                .gt('montant', gt)
-                .lt('montant', lt)
-        } else if (gt && !lt) {
-            result = await incomeShema.find({ username })
-                .gt('montant', gt)
-        } else if (!gt && lt) {
-            result = await incomeShema.find({ username })
-                .lt('montant', lt)
-        } else {
-            result = await incomeShema.find({ username })
-                .skip(page).limit(limit)
-        }
-
-        if(result.length < 1){
-            const message = `no data find in your incomes`
+        if (result.length < 1) {
+            const message = `no data fnd in your incomes`
             const successResponse = APIResponse.success({}, message)
             return res.status(200).json(successResponse.toJSON())
         }
-
         const successResponse = APIResponse.success(result, '')
         res.status(200).json(successResponse.toJSON())
 
     } catch (error) {
         console.log(error)
-        res.status(400).json(error)
+
     }
 }
 
 
-const createIncomes = async (req, res) => {
 
+const createIncomes = async (req, res) => {
     const { title, montant } = req.body
     const { username } = req.user
 
@@ -58,20 +94,17 @@ const createIncomes = async (req, res) => {
 
     try {
         await incomeShema.create({ title, montant, username })
-        const budget = await budgetSchema.findOne({ username })
-        const totalIncome = await getTotalIncomes(username)
-        const totalExpense = await getTotalExpense(username)
-
-        const solde = budget.montant + (totalIncome - totalExpense)
-        await financeShema.findOneAndUpdate({username} ,{ totalIncome, solde })
+        await updateFinanceAfterIncomeChanged(username)
 
         const message = `income created solde and total income updated`
         const successResponse = APIResponse.success({}, message)
-       return res.status(201).json(successResponse.toJSON())
+        return res.status(201).json(successResponse.toJSON())
 
     } catch (error) {
         console.log(error)
-        res.status(400).json(error)
+        const errorMessage = `Error creating income: ${error.message}`
+        const errorResponse = APIResponse.error({}, errorMessage)
+        return res.status(500).json(errorResponse.toJSON())
     }
 }
 
@@ -88,19 +121,8 @@ const deleteIncomes = async (req, res) => {
     }
 
     try {
-        const findIncomes = await incomeShema.find({username})
-        
-        if(findIncomes.length > 0){
-            const message = `no data find in your incomes`
-            const successResponse = APIResponse.success({}, message)
-            return res.status(204).json(successResponse.toJSON())
-        }
-
-        await incomeShema.findOneAndDelete({username})
-        const totalIncome = await getTotalIncomes(username)
-        const totalExpense = await getTotalExpense(username)
-        const solde = budget.montant + (totalIncome - totalExpense)
-        await financeShema.findOneAndUpdate({username} ,{ totalIncome, solde })
+        await incomeShema.findOneAndDelete({ username })
+        await updateFinanceAfterIncomeChanged()
 
         const message = `income for id ${id} deleted solde and total income updated `
         const successResponse = APIResponse.success({}, message)
@@ -108,7 +130,9 @@ const deleteIncomes = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        res.status(400).json(error)
+        const errorMessage = `Error deleting income: ${error.message}`
+        const errorResponse = APIResponse.error({}, errorMessage)
+        return res.status(500).json(errorResponse.toJSON())
     }
 }
 

@@ -8,60 +8,56 @@ const logUser = require('../../utils/logUser')
 const { INVALID_TOKEN_TIME } = require('../../constants/constants')
 
 
-const connectUser = async (req, res) => {
-    const { username, password } = req.body
 
-    if (!username || !password) {
-        const message = `username or password can't be empty`
-        const errorResponse = APIResponse.error({}, message)
-        return res.status(400).json(errorResponse.toJSON())
+// ------------HELPERS-----------
+
+const createToken = async (user) => {
+    
+    let token
+
+    // if user don't have yet token we genrate a new token for him 
+    //else we use the old token because it will expire in 6 month
+
+    if (!user.token) {
+        token = jwt.sign(
+            { username: user.username },
+            process.env.JTW_SECRET,
+            { expiresIn: INVALID_TOKEN_TIME }
+        )
+        await userSchema.updateOne({ username: user.username }, { token })
+    } else {
+        token = user.token
     }
 
+    return token
+}
+
+
+
+// ------------CONTROLLERS-----------
+
+const connectUser = async (req, res) => {
+    // we have already find the user in middaleware checkPassword
+    // and put his data in req.user
+    const user = req.user
+    const { username } = req.body
+
     try {
-        const findUser = await userSchema.findOne({ username })
+        const token = await createToken(user)
+        const data = { username, token }
+        const message = `connected`
+        const successResponse = APIResponse.success(data, message)
+        res.cookie('jwt', token, { maxAge: INVALID_TOKEN_TIME, httpOnly: true });
+        logUser(username)
+        res.status(200).json(successResponse.toJSON())
+        logUser(username)
 
-        if (!findUser) {
-            const message = `incorect username or password`
-            const errorResponse = APIResponse.error({}, message)
-            return res.status(400).json(errorResponse.toJSON())
-        }
-
-        bcrypt.compare(password,findUser.password, async (error, match) =>{
-
-            if(error){
-                console.log(error)
-            }
-
-            if (!match) {
-                const message = `incorect username or password`
-                const errorResponse = APIResponse.error({}, message)
-                return res.status(400).json(errorResponse.toJSON())
-            }
-
-            let token
-
-            if (!findUser.token) {
-                token = jwt.sign(
-                    { username },
-                    process.env.JTW_SECRET,
-                    {expiresIn : INVALID_TOKEN_TIME}
-                )
-                await userSchema.updateOne({ username }, {token})
-            } else {
-                token = findUser.token
-            }
-    
-            const data = { username, token }
-            const message = `connected`
-            const successResponse = APIResponse.success(data, message)
-            res.cookie('jwt', token, { maxAge: INVALID_TOKEN_TIME, httpOnly: true});
-            res.status(200).json(successResponse.toJSON())
-            logUser(username)
-        })
 
     } catch (error) {
         console.log(error)
-        res.status(400).json(error)
+        const errorMessage = `Something went wrong: ${error.message}` // Capture de l'erreur
+        const errorResponse = APIResponse.error({}, errorMessage)
+        return res.status(500).json(errorResponse.toJSON())
     }
 }
 

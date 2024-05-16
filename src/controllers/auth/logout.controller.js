@@ -8,8 +8,8 @@ const logout = async (req, res) => {
         return res.status(200).json({ message: 'user deconeted' })
     } catch (error) {
         console.log(error)
-        const message = `Something went worng`
-        const errorResponse = APIResponse.error({}, message)
+        const errorMessage = `Something went wrong: ${error.message}` // Capture de l'erreur
+        const errorResponse = APIResponse.error({}, errorMessage)
         return res.status(500).json(errorResponse.toJSON())
     }
 }

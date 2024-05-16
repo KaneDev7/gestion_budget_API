@@ -5,16 +5,19 @@ const budgetShema = new Schema({
     
     montant: {
         type: Number,
-        required: true
+        required: true,
+        min: [0, 'La valuer du montant doit rester positive']
     },
 
     username : {
         type : String
     },
-    data : {
-        type : Date,
-        default : new Date().toDateString()
+
+    createdAt: {
+        type: Date,
+        default: Date.now 
     }
+
 },)
 
 

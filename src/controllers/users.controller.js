@@ -47,7 +47,9 @@ const updatePassword = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        res.status(400).json(error)
+        const errorMessage = `Something went wrong: ${error.message}` // Capture de l'erreur
+        const errorResponse = APIResponse.error({}, errorMessage)
+        return res.status(500).json(errorResponse.toJSON())
     }
 }
 
@@ -69,8 +71,8 @@ const deleteUser = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        const message = `Something went worng`
-        const errorResponse = APIResponse.error({}, message)
+        const errorMessage = `Something went wrong: ${error.message}` // Capture de l'erreur
+        const errorResponse = APIResponse.error({}, errorMessage)
         return res.status(500).json(errorResponse.toJSON())
     }
 }

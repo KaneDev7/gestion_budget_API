@@ -35,7 +35,9 @@ const generateNewToken = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        res.status(400).json(error)
+        const errorMessage = `Something went wrong: ${error.message}` // Capture de l'erreur
+        const errorResponse = APIResponse.error({}, errorMessage)
+        return res.status(500).json(errorResponse.toJSON())
     }
 
 }
@@ -50,7 +52,9 @@ const getToken = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        res.status(400).json(error)
+        const errorMessage = `Something went wrong: ${error.message}` // Capture de l'erreur
+        const errorResponse = APIResponse.error({}, errorMessage)
+        return res.status(500).json(errorResponse.toJSON())
     }
 
 }

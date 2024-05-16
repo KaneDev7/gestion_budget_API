@@ -9,7 +9,7 @@ module.exports = class APIResponse {
       return new APIResponse('success', data, message);
     }
   
-    static error(message, data = null) {
+    static error(data = null, message) {
       return new APIResponse('error', data, message);
     }
   
