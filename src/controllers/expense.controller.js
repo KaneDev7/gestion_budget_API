@@ -92,12 +92,6 @@ const createExpenses = async (req, res) => {
     const { title, montant } = req.body
     const { username } = req.user
 
-    if (!title || !montant) {
-        const message = `title or montant can't be empty`
-        const errorResponse = APIResponse.error({}, message)
-        return res.status(400).json(errorResponse.toJSON())
-    }
-
     try {
         await expenseShema.create({ title, montant, username })
         await updateFinanceAfterExpensesChanged(username)
@@ -108,7 +102,7 @@ const createExpenses = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        const errorMessage = `Error creating income: ${error.message}` // Capture de l'erreur
+        const errorMessage = `Error creating income: ${error.message}` 
         const errorResponse = APIResponse.error({}, errorMessage)
         return res.status(500).json(errorResponse.toJSON())
     }

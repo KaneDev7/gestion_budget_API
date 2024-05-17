@@ -17,5 +17,4 @@ const getFinances = async (req, res) => {
     }
 }
 
-
 module.exports = { getFinances}

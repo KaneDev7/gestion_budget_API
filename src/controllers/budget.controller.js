@@ -20,6 +20,7 @@ const getBudget = async (req, res) => {
     }
 }
 
+
 const createBudget = async (req, res) => {
     const { montant } = req.body
     const { username } = req.user
@@ -31,7 +32,6 @@ const createBudget = async (req, res) => {
     }
 
     try {
-
         const totalExpense = await getTotalExpense(username)
         const totalIncome = await getTotalIncomes(username)
 

@@ -3,20 +3,20 @@ const tokenSchema = require('../../models/token.model')
 const APIResponse = require('../../utils/APIResponse')
 const jwt = require('jsonwebtoken')
 const { INVALID_TOKEN_TIME } = require('../../constants/constants')
-const { setTokenToInvalidsTokens } = require('../../utils/token')
+const { pushTokenToInvalidsTokensList } = require('../../utils/token')
 
 
 const generateNewToken = async (req, res) => {
 
-    const token = req.headers.authorization?.split(' ')[1] ?? req?.cookies?.jwt
+    const currentToken = req.headers.authorization?.split(' ')[1] ?? req?.cookies?.jwt
     const { username } = req.user
 
-    if (!token) {
+    if (!currentToken) {
         const errorResponse = APIResponse.error('token invalid', {})
         return res.status(400).json(errorResponse.toJSON())
     }
 
-    await setTokenToInvalidsTokens(token)
+    await pushTokenToInvalidsTokensList(currentToken)
     
     try {
         const token = jwt.sign(
@@ -35,12 +35,15 @@ const generateNewToken = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        const errorMessage = `Something went wrong: ${error.message}` // Capture de l'erreur
+        const errorMessage = `Something went wrong: ${error.message}` 
         const errorResponse = APIResponse.error({}, errorMessage)
         return res.status(500).json(errorResponse.toJSON())
     }
 
 }
+
+
+
 
 const getToken = async (req, res) => {
     const { username } = req.user

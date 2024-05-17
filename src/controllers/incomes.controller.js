@@ -85,13 +85,7 @@ const getIncomes = async (req, res) => {
 const createIncomes = async (req, res) => {
     const { title, montant } = req.body
     const { username } = req.user
-
-    if (!title || !montant) {
-        const message = `title or montant can't be empty`
-        const errorResponse = APIResponse.error({}, message)
-        return res.status(400).json(errorResponse.toJSON())
-    }
-
+    
     try {
         await incomeShema.create({ title, montant, username })
         await updateFinanceAfterIncomeChanged(username)

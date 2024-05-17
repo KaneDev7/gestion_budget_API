@@ -64,7 +64,6 @@ const checkPassword = async (req, res, next) => {
     const { username, password } = req.body
 
     const findUser = await userSchema.findOne({ username }, { _id: 0, username: 1, password: 1 })
-
     bcrypt.compare(password, findUser.password, async (error, match) => {
         if (error) {
             console.log(error)
@@ -78,8 +77,6 @@ const checkPassword = async (req, res, next) => {
         req.user = findUser
         next()
     })
-
-
 }
 
 

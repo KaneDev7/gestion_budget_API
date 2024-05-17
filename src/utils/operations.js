@@ -5,7 +5,6 @@ const incomeShema = require('../models/incomes.model')
 
 
 const getTotalExpense = async (username) => {
-    console.log('expenses username', username)
 
     try {
         const expenses = await expenseShema.find({ username })
@@ -23,7 +22,6 @@ const getTotalExpense = async (username) => {
             }
         ]);
 
-        console.log('total expenses', result)
         return result.length > 0 ? result[0].total : 0;
 
     } catch (error) {
@@ -51,7 +49,6 @@ const getTotalIncomes = async (username) => {
                 }
             }
         ])
-        console.log('incomes result', result)
         return result.length > 0 ? result[0].total : 0;
     } catch (error) {
         console.error(error);
