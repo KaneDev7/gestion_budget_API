@@ -6,6 +6,7 @@ const budgetSchema = require('../models/budget.model')
 const APIResponse = require('../utils/APIResponse')
 const { getTotalExpense, getTotalIncomes } = require("../utils/operations")
 const { PAGE_LIMIT } = require('../constants/constants')
+const { isValidObjectId } = require('mongoose')
 
 
 // ------------HELPER-----------
@@ -14,7 +15,7 @@ const { PAGE_LIMIT } = require('../constants/constants')
 const findExpensesByFilterAndSort = async ({ limit, page, gt, lt, sort }, username) => {
 
     if (!username) return
-    const projection = { montant: 1 , title : 1, createdAt : 1, createdAt : 1}
+    const projection = { montant: 1, title: 1, createdAt: 1 }
 
     let result
 
@@ -39,7 +40,7 @@ const findExpensesByFilterAndSort = async ({ limit, page, gt, lt, sort }, userna
 
     } else {
         result = await expenseShema.find({ username })
-            .skip(page - 1)
+            .skip(page)
             .limit(limit || PAGE_LIMIT)
             .sort(sort && { montant: sort })
             .select(projection)
@@ -57,9 +58,9 @@ const updateFinanceAfterExpensesChanged = async (username) => {
     const totalIncome = await getTotalIncomes(username)
 
     const solde = budget.montant + (totalIncome - totalExpense)
-    const bdgetUpdate = budget.montant - totalExpense
+    const budgetUpdate = budget.montant - totalExpense
     await financeShema.findOneAndUpdate({ username }, { totalExpense, solde })
-    await budgetSchema.findOneAndUpdate({ username }, { montant: bdgetUpdate })
+    await budgetSchema.findOneAndUpdate({ username }, { montant: budgetUpdate })
 }
 
 
@@ -102,9 +103,8 @@ const createExpenses = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        const errorMessage = `Error creating income: ${error.message}` 
-        const errorResponse = APIResponse.error({}, errorMessage)
-        return res.status(500).json(errorResponse.toJSON())
+        const errorResponse = APIResponse.error({}, error.message)
+        return res.status(400).json(errorResponse.toJSON())
     }
 }
 
@@ -114,8 +114,8 @@ const deleteExpenses = async (req, res) => {
     const { id } = req.params
     const { username } = req.user
 
-    if (!id) {
-        const message = `cannot find id`
+    if (!isValidObjectId(id)) {
+        const message = `id un known ${id}`
         const errorResponse = APIResponse.error({}, message)
         return res.status(400).json(errorResponse.toJSON())
     }
@@ -124,7 +124,7 @@ const deleteExpenses = async (req, res) => {
         await expenseShema.findOneAndDelete({ username })
         await updateFinanceAfterExpensesChanged(username)
 
-        const message = `expense for id ${id} deleted solde and total expense updated `
+        const message = `expense for id ${id} deleted solde and total expense updated`
         const successResponse = APIResponse.success({}, message)
         res.status(200).json(successResponse.toJSON())
 
@@ -132,7 +132,7 @@ const deleteExpenses = async (req, res) => {
         console.log(error)
         const errorMessage = `Error deleting income: ${error.message}` // Capture de l'erreur
         const errorResponse = APIResponse.error({}, errorMessage)
-        return res.status(500).json(errorResponse.toJSON()) 
+        return res.status(500).json(errorResponse.toJSON())
     }
 }
 

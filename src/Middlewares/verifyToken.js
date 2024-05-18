@@ -20,26 +20,26 @@ const findTokenInIvallidTokenList = async (token) => {
 const verifyToken = async (req, res, next) => {
     if (req.url === '/auth') next() 
 
-    let errorToken = 'token invalid'
+    let errorToken = 'invalid token'
     const token = req.headers.authorization?.split(' ')[1] ?? req?.cookies?.jwt
 
     if (!token) {
-        const errorResponse = APIResponse.error(errorToken, {})
-        return res.status(400).json(errorResponse.toJSON())
+        const errorResponse = APIResponse.error({}, errorToken)
+        return res.status(401).json(errorResponse.toJSON())
     }
 
     const isTokenInInvalidTokenList = await findTokenInIvallidTokenList(token)
     if (isTokenInInvalidTokenList) {
-        const errorResponse = APIResponse.error(errorToken, {})
-        return res.status(400).json(errorResponse.toJSON())
+        const errorResponse = APIResponse.error({}, errorToken)
+        return res.status(401).json(errorResponse.toJSON())
     }
 
     try {
         jwt.verify(token, process.env.JTW_SECRET, (error, decoded) => {
             if (error) {
                 errorToken = error.message
-                const errorResponse = APIResponse.error(errorToken, {})
-                return res.status(400).json(errorResponse.toJSON())
+                const errorResponse = APIResponse.error({},errorToken)
+                return res.status(401).json(errorResponse.toJSON())
             }
             req.user = { username: decoded.username }
             next()
@@ -48,7 +48,7 @@ const verifyToken = async (req, res, next) => {
     } catch (err) {
         console.log(err)
         const errorResponse = APIResponse.error(errorToken, {})
-        return res.status(400).json(errorResponse.toJSON())
+        return res.status(500).json(errorResponse.toJSON())
     }
 }
 

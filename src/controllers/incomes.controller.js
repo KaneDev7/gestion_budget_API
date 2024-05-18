@@ -37,7 +37,7 @@ const findIncomesByFilterAndSort = async ({ limit, page, gt, lt, sort }, usernam
 
     } else {
         result = await incomeShema.find({ username })
-            .skip(parseFloat(page) - 1)
+            .skip(page)
             .limit(limit || PAGE_LIMIT)
             .sort(sort && { montant: sort })
             .select(projection)

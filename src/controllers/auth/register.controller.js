@@ -14,9 +14,9 @@ const { SALT_ROUNDS } = require('../../constants/constants')
 
 const createAndInitDataforNewUser = async (password, username) => {
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-    userSchema.create({ username, password: passwordHash, token : '' })
-    budgetShema.create({username, montant : 0})
-    financeShema.create({username, totalExpense:0, totalIncome:0, solde: 0})
+   await userSchema.create({ username, password: passwordHash, token : '' })
+   await budgetShema.create({username, montant : 0})
+   await financeShema.create({username, totalExpense:0, totalIncome:0, solde: 0})
 }
 
 
