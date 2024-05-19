@@ -1,14 +1,25 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
+const express = require('express')
 
 
-module.exports = connect = async () =>{
-  const mongoServer = await MongoMemoryServer.create()
-  const mongoUri =  mongoServer.getUri()
+const mongoDbMemory = {
+  connect: async () => {
+    const mongoServer = await MongoMemoryServer.create()
+    const mongoUri = mongoServer.getUri()
 
-  await mongoose.connect(mongoUri, {dbName : 'testinDb'})
-  console.log(`MongoMemoryServer successfully connected to ${mongoUri}`)
+    await mongoose.connect(mongoUri, { dbName: 'testinDb' })
+    console.log(`MongoMemoryServer successfully connected to ${mongoUri}`)
+  },
+
+  disconnect: async () => {
+    await mongoose.disconnect()
+  }
 }
+
+module.exports = mongoDbMemory
+
+
 
 
 

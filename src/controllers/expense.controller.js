@@ -56,11 +56,8 @@ const updateFinanceAfterExpensesChanged = async (username) => {
     const budget = await budgetSchema.findOne({ username })
     const totalExpense = await getTotalExpense(username)
     const totalIncome = await getTotalIncomes(username)
-
-    const solde = budget.montant + (totalIncome - totalExpense)
-    const budgetUpdate = budget.montant - totalExpense
-    await financeShema.findOneAndUpdate({ username }, { totalExpense, solde })
-    await budgetSchema.findOneAndUpdate({ username }, { montant: budgetUpdate })
+    const solde = (budget.montant - totalExpense) + (totalIncome - totalExpense)
+    await financeShema.findOneAndUpdate({ username }, { totalExpense, solde, budget: budget.montant - totalExpense })
 }
 
 
@@ -87,9 +84,7 @@ const getExpenses = async (req, res) => {
 }
 
 
-
 const createExpenses = async (req, res) => {
-
     const { title, montant } = req.body
     const { username } = req.user
 
@@ -97,7 +92,7 @@ const createExpenses = async (req, res) => {
         await expenseShema.create({ title, montant, username })
         await updateFinanceAfterExpensesChanged(username)
 
-        const message = `expense created, budget, solde and total expense updated`
+        const message = `expense created and finance updated`
         const successResponse = APIResponse.success({}, message)
         res.status(201).json(successResponse.toJSON())
 
@@ -109,13 +104,12 @@ const createExpenses = async (req, res) => {
 }
 
 
-
 const deleteExpenses = async (req, res) => {
     const { id } = req.params
     const { username } = req.user
 
     if (!isValidObjectId(id)) {
-        const message = `id un known ${id}`
+        const message = `id unknown ${id}`
         const errorResponse = APIResponse.error({}, message)
         return res.status(400).json(errorResponse.toJSON())
     }
@@ -124,7 +118,7 @@ const deleteExpenses = async (req, res) => {
         await expenseShema.findOneAndDelete({ username })
         await updateFinanceAfterExpensesChanged(username)
 
-        const message = `expense for id ${id} deleted solde and total expense updated`
+        const message = `expense for id ${id} deleted and finance updated`
         const successResponse = APIResponse.success({}, message)
         res.status(200).json(successResponse.toJSON())
 

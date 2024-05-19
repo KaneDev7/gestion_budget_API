@@ -33,7 +33,6 @@ const getTotalExpense = async (username) => {
 
 
 const getTotalIncomes = async (username) => {
-    console.log('incomes username', username)
     try {
         const incomes = await incomeShema.find({ username })
         if (incomes.length < 1 ) return 0

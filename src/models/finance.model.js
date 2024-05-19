@@ -1,6 +1,9 @@
 const { Schema, default: mongoose } = require('mongoose')
 
 const financeShema = new Schema({
+    budget : {
+        type: Number,
+    },
     totalExpense: {
         type: Number,
     },

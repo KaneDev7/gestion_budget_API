@@ -35,12 +35,11 @@ app.use('/', require('./routes/incomes.route'))
 // not found rout
 app.use((req, res) => { res.status(404).json({ message: 'Not found' }); });
 
-
 // connnet db
 // connectDB()
-connect()
+// connect()
 
-const server =  app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`server run in port ${PORT}`)
 })
 
