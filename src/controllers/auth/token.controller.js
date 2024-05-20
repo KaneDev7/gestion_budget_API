@@ -12,7 +12,7 @@ const generateNewToken = async (req, res) => {
     const { username } = req.user
 
     if (!currentToken) {
-        const errorResponse = APIResponse.error('token invalid', {})
+        const errorResponse = APIResponse.error({}, 'invalid token')
         return res.status(400).json(errorResponse.toJSON())
     }
 
@@ -39,10 +39,7 @@ const generateNewToken = async (req, res) => {
         const errorResponse = APIResponse.error({}, errorMessage)
         return res.status(500).json(errorResponse.toJSON())
     }
-
 }
-
-
 
 
 const getToken = async (req, res) => {
@@ -59,9 +56,7 @@ const getToken = async (req, res) => {
         const errorResponse = APIResponse.error({}, errorMessage)
         return res.status(500).json(errorResponse.toJSON())
     }
-
 }
-
 
 module.exports = {
     generateNewToken,

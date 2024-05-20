@@ -8,13 +8,10 @@ const logUser = require('../../utils/logUser')
 const { INVALID_TOKEN_TIME } = require('../../constants/constants')
 
 
-
 // ------------HELPERS-----------
-
 const createToken = async (user) => {
     
     let token
-
     // if user don't have yet token we genrate a new token for him 
     //else we use the old token because it will expire in 6 month
 
@@ -28,14 +25,10 @@ const createToken = async (user) => {
     } else {
         token = user.token
     }
-
     return token
 }
 
-
-
 // ------------CONTROLLERS-----------
-
 const connectUser = async (req, res) => {
     // we have already find the user in middaleware checkPassword
     // and put his data in req.user

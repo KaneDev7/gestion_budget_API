@@ -6,7 +6,6 @@ const APIResponse = require('../utils/APIResponse')
 const { getTotalExpense, getTotalIncomes } = require('../utils/operations')
 
 
-
 const createBudget = async (req, res) => {
     const { montant } = req.body
     const { username } = req.user 
@@ -20,7 +19,6 @@ const createBudget = async (req, res) => {
     try {
         const totalExpense = await getTotalExpense(username)
         const totalIncome = await getTotalIncomes(username)
-        console.log('totalExpense', totalExpense)
         await budgetSchema.findOneAndUpdate({ username }, {montant : montant - totalExpense})
         const solde = (montant - totalExpense) + (totalIncome - totalExpense)
         await financeShema.findOneAndUpdate({ username }, { solde, budget : montant - totalExpense })

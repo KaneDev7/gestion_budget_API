@@ -12,7 +12,7 @@ const userShema = new Schema({
     password: {
         type: String,
         require: true,
-        minLength : [3, 'Le mot de passe doit avoir au minimum trois caractères'],
+        minLength : [3, 'The password must have at least three characters'],
     },
     
     token: {

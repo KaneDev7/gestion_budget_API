@@ -7,15 +7,12 @@ const tokenID = 'token_id'
 
 
 const findTokenInIvallidTokenList = async (token) => {
-
     const invalidTokenDoc = await tokenSchema.findOne({ tokenID }, { _id: 0 })
-
     if (invalidTokenDoc) {
         const invalidTokenArr = invalidTokenDoc.invalidToken
         return invalidTokenArr.includes(token)
     }
 }
-
 
 const verifyToken = async (req, res, next) => {
     if (req.url === '/auth') next() 
@@ -45,9 +42,9 @@ const verifyToken = async (req, res, next) => {
             next()
         })
 
-    } catch (err) {
-        console.log(err)
-        const errorResponse = APIResponse.error(errorToken, {})
+    } catch (error) {
+        console.log(error)
+        const errorResponse = APIResponse.error({}, `Something went wrong: ${error.message}`)
         return res.status(500).json(errorResponse.toJSON())
     }
 }
