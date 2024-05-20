@@ -7,8 +7,6 @@ const bodyParser = require('body-parser')
 const verifyToken = require('./Middlewares/verifyToken')
 const log = require('./Middlewares/log')
 
-
-
 const app = express()
 require('dotenv').config()
 
@@ -19,7 +17,6 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(log)
-
 
 // routes
 app.use('/', require('./routes/auth.route'))
@@ -35,13 +32,18 @@ app.use('/', require('./routes/incomes.route'))
 // not found rout
 app.use((req, res) => { res.status(404).json({ message: 'Not found' }); });
 
-// connnet db
+
+// Pour tester l'API nous devons commenté ce code pour empécher
+// le relancement du serveur apres que chaque fois un ficher de test sois terminé
+// Sinon ça provoquera des erreurs de port en indiquant que le serveur est deja lancé sur le port tel.
+// Concernant la connection à la base de donnée on utilse MongoMemoryServer pour simuler la base de donnée
+
+
+//---------- PORT AND DATABASE ----------
+
 // connectDB()
-// connect()
+//  app.listen(PORT, () => {
+//     console.log(`server run in port ${PORT}`)
+// })
 
-const server = app.listen(PORT, () => {
-    console.log(`server run in port ${PORT}`)
-})
-
-
-module.exports = server
+ module.exports = app

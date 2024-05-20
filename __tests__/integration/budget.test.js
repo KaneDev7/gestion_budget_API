@@ -6,7 +6,7 @@ const mongoDbMemory = require('../../configs/dbMemo')
 const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im9tYXIiLCJpYXQiOjE3MTU5NzA0ODEsImV4cCI6MTcyNjc5NzA0ODF9.f1Av4amrPrz9Uh0-ytsW9DVICULWWUKUseE9egscl0I';
 const invalidToken = '12354';
 
-let server
+let server = require('../../src/app');
 
 describe('budget route', () => {
 
@@ -15,7 +15,6 @@ describe('budget route', () => {
     })
 
     beforeEach(async () => {
-        server = require('../../src/app');
         await budgetSchema.create({ username: 'omar', montant: 0 });
         await financeSchema.create({ username: 'omar', totalExpense: 0, totalIncome: 0, solde: 0, budget: 0 });
     });
@@ -23,12 +22,12 @@ describe('budget route', () => {
     afterEach(async () => {
         await budgetSchema.deleteMany();
         await financeSchema.deleteMany();
-        await server.close();
     });
 
     afterAll(async () =>{
        await mongoDbMemory.disconnect()
     })
+
     // ------------POST------------
     describe('POST /api/budget', () => {
         it('should create a budget with valid data and update finance', async () => {

@@ -29,7 +29,6 @@ describe('expenses route', () => {
     await expenseSchema.deleteMany()
     await budgetSchema.deleteMany()
     await financeSchema.deleteMany()
-    server.close()
   })
 
   afterAll(async () =>{

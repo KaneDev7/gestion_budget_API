@@ -18,7 +18,6 @@ describe('incomes route', () => {
 
     beforeEach(async () => {
         // the token contains omar as username
-        server = require('../../src/app');
         await budgetSchema.create({ username: 'omar', montant: 0 });
         await financeSchema.create({ username: 'omar', totalExpense: 0, totalIncome: 0, solde: 0, budget: 0 });
     });
@@ -27,13 +26,11 @@ describe('incomes route', () => {
         await incomeSchema.deleteMany();
         await budgetSchema.deleteMany();
         await financeSchema.deleteMany();
-        await server.close();
     });
 
 
     afterAll(async () => {
         await mongoDbMemory.disconnect()
-        await server.close();
     })
 
     // ------------GET------------
