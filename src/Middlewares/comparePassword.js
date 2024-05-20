@@ -20,7 +20,7 @@ const verifyPasswordInDb = (newPassword, currentPassword) =>{
 const comparePassword = async (req, res, next) => {
     const { username } = req.user
     const { currentPassword, newPassword } = req.body
-
+    
     if(!newPassword){
         const errorMessage = `Something went wrong: new password not provided` // Capture de l'erreur
         const errorResponse = APIResponse.error({}, errorMessage)

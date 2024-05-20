@@ -33,17 +33,11 @@ app.use('/', require('./routes/incomes.route'))
 app.use((req, res) => { res.status(404).json({ message: 'Not found' }); });
 
 
-// Pour tester l'API nous devons commenté ce code pour empécher
-// le relancement du serveur apres que chaque fois un ficher de test sois terminé
-// Sinon ça provoquera des erreurs de port en indiquant que le serveur est deja lancé sur le port tel.
-// Concernant la connection à la base de donnée on utilse MongoMemoryServer pour simuler la base de donnée
+// comment the code below if you wante to test the API . becaifull to d'ont comment <<  module.exports = app >>
 
+connectDB()
+ app.listen(PORT, () => {
+    console.log(`server run in port ${PORT}`)
+})
 
-//---------- PORT AND DATABASE ----------
-
-// connectDB()
-//  app.listen(PORT, () => {
-//     console.log(`server run in port ${PORT}`)
-// })
-
- module.exports = app
+ module.exports = app  // don't comment this

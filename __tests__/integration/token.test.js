@@ -4,10 +4,7 @@ const jwt = require('jsonwebtoken');
 const userSchema = require('../../src/models/users.model');
 const tokenSchema = require('../../src/models/token.model');
 const mongoDbMemory = require('../../configs/dbMemo');
-const { INVALID_TOKEN_TIME } = require('../../src/constants/constants');
-const { pushTokenToInvalidsTokensList } = require('../../src/utils/token');
 const server = require('../../src/app');
-const { generateNewToken } = require('../../src/controllers/auth/token.controller');
 
 const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im9tYXIiLCJpYXQiOjE3MTU5NzA0ODEsImV4cCI6MTcyNjc5NzA0ODF9.f1Av4amrPrz9Uh0-ytsW9DVICULWWUKUseE9egscl0I';
 const invalidToken = '12354';
