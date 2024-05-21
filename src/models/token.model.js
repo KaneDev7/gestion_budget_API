@@ -7,6 +7,7 @@ const tokenSchema = new Schema({
         type : String,
         default : 'token_id'
     },
+    
     invalidToken: {
         type: [String]
     },

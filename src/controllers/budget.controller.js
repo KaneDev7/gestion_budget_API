@@ -19,7 +19,7 @@ const createBudget = async (req, res) => {
     try {
         const totalExpense = await getTotalExpense(username)
         const totalIncome = await getTotalIncomes(username)
-        await budgetSchema.findOneAndUpdate({ username }, {montant : montant - totalExpense})
+        await budgetSchema.findOneAndUpdate({ username }, {montant})
         const solde = (montant - totalExpense) + (totalIncome - totalExpense)
         await financeShema.findOneAndUpdate({ username }, { solde, budget : montant - totalExpense })
 

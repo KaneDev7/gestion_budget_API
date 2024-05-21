@@ -52,7 +52,6 @@ const findExpensesByFilterAndSort = async ({ limit, page, gt, lt, sort }, userna
 
 const updateFinanceAfterExpensesChanged = async (username) => {
     if (!username) return
-
     const budget = await budgetSchema.findOne({ username })
     const totalExpense = await getTotalExpense(username)
     const totalIncome = await getTotalIncomes(username)
@@ -69,7 +68,7 @@ const getExpenses = async (req, res) => {
         const result = await findExpensesByFilterAndSort(req.query, username)
 
         if (result.length < 1) {
-            const message = `no data fond`
+            const message = `no data fond in your expenses`
             const successResponse = APIResponse.success({}, message)
             return res.status(200).json(successResponse.toJSON())
         }

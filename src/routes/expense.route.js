@@ -9,7 +9,6 @@ const {
 
 const router = express.Router()
 
-
 router.get('/api/expenses', getExpenses)
 router.post('/api/expense', createExpenses)
 router.delete('/api/expenses/:id',deleteExpenses)

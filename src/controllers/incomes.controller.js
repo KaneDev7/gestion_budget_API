@@ -53,7 +53,7 @@ const updateFinanceAfterIncomeChanged = async (username) => {
     const budget = await budgetSchema.findOne({ username })
     const totalIncome = await getTotalIncomes(username)
     const totalExpense = await getTotalExpense(username)
-    const solde = budget.montant + (totalIncome - totalExpense)
+    const solde = (budget.montant - totalExpense) + (totalIncome - totalExpense)
     await financeShema.findOneAndUpdate({ username }, { totalIncome, solde, budget: budget.montant - totalExpense })
 }
 
