@@ -4,7 +4,7 @@
   "description": "Une API qui permets au utilisateurs de controller leurs finances",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon src/app.js --watchAll",
+    "start": "node src/app.js",
     "test": "jest --watchAll"
   },
   "author": "Oumar Kane",
