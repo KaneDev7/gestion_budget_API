@@ -35,9 +35,9 @@ app.use((req, res) => { res.status(404).json({ message: 'Not found' }); });
 
 // comment the code below if you wante to test the API . becaifull to d'ont comment <<  module.exports = app >>
 
-// connectDB()
-//  app.listen(PORT, () => {
-//     console.log(`server run in port ${PORT}`)
-// })
+connectDB()
+ app.listen(PORT, () => {
+    console.log(`server run in port ${PORT}`)
+})
 
  module.exports = app  // don't comment this
