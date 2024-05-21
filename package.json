@@ -1,11 +1,11 @@
 {
   "name": "gestion-budget-api",
   "version": "1.0.0",
-  "description": "API pour le projet l'application de la gestion de la gestion de budget",
+  "description": "Une API qui permets au utilisateurs de controller leurs finances",
   "main": "app.js",
   "scripts": {
     "dev": "nodemon src/app.js --watchAll",
-    "test": "jest"
+    "test": "jest --watchAll"
   },
   "author": "Oumar Kane",
   "license": "ISC",
