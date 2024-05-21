@@ -114,7 +114,7 @@ const deleteExpenses = async (req, res) => {
     }
 
     try {
-        await expenseShema.findOneAndDelete({ username })
+        await expenseShema.findByIdAndDelete({ _id : id })
         await updateFinanceAfterExpensesChanged(username)
 
         const message = `expense for id ${id} deleted and finance updated`

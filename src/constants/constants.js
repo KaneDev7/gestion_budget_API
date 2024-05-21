@@ -4,9 +4,15 @@ const INVALID_TOKEN_TIME = 6 * 30 * 24 * 60 * 60 * 1000 // 6 months
 const TOEKN_ID = 'token_id'
 const PAGE_LIMIT = 5
 
+// test
+const TEST_VALID_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im9tYXIiLCJpYXQiOjE3MTU5NzA0ODEsImV4cCI6MTcyNjc5NzA0ODF9.f1Av4amrPrz9Uh0-ytsW9DVICULWWUKUseE9egscl0I';
+const TEST_VALID_USERNAME = 'omar'
+
 module.exports = {
     SALT_ROUNDS,
     INVALID_TOKEN_TIME,
     TOEKN_ID, 
-    PAGE_LIMIT
+    PAGE_LIMIT,
+    TEST_VALID_TOKEN,
+    TEST_VALID_USERNAME
 }

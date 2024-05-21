@@ -4,12 +4,9 @@ const expenseSchema = require('../../src/models/expense.model');
 const financeSchema = require('../../src/models/finance.model');
 const budgetSchema = require('../../src/models/budget.model')
 const mongoDbMemory = require('../../configs/dbMemo')
-
-
-const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im9tYXIiLCJpYXQiOjE3MTU5NzA0ODEsImV4cCI6MTcyNjc5NzA0ODF9.f1Av4amrPrz9Uh0-ytsW9DVICULWWUKUseE9egscl0I'
-const invalidToken = '12354'
-
 let server = require('../../src/app');
+const { TEST_VALID_TOKEN, TEST_VALID_USERNAME } = require('../../src/constants/constants');
+const invalidToken = '12354'
 
 
 describe('expenses route', () => {
@@ -20,8 +17,8 @@ describe('expenses route', () => {
 
   beforeEach(async () => {
     // the token contain omar as username
-    await budgetSchema.create({ username: 'omar', montant: 0 })
-    await financeSchema.create({ username: 'omar', totalExpense: 0, totalIncome: 0, solde: 0, budget: 0 })
+    await budgetSchema.create({ username: TEST_VALID_USERNAME, montant: 0 })
+    await financeSchema.create({ username: TEST_VALID_USERNAME, totalExpense: 0, totalIncome: 0, solde: 0, budget: 0 })
   })
 
 
@@ -44,11 +41,11 @@ describe('expenses route', () => {
           title: 'Test Expense',
           montant: 100,
         })
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       const getResponse = await request(server)
         .get('/api/expenses')
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       expect(getResponse.status).toBe(200);
       expect(getResponse.body.data).toEqual([
@@ -86,14 +83,14 @@ describe('expenses route', () => {
   describe('GET /api/expenses with filters', () => {
     it('should return filtered expenses by montant', async () => {
       await expenseSchema.create([
-        { title: 'Expense 1', montant: 50, username: 'omar' },
-        { title: 'Expense 2', montant: 150, username: 'omar' },
-        { title: 'Expense 3', montant: 250, username: 'omar' }
+        { title: 'Expense 1', montant: 50, username: TEST_VALID_USERNAME },
+        { title: 'Expense 2', montant: 150, username: TEST_VALID_USERNAME },
+        { title: 'Expense 3', montant: 250, username: TEST_VALID_USERNAME }
       ]);
 
       const response = await request(server)
         .get('/api/expenses?gt=100')
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(2);
@@ -106,15 +103,15 @@ describe('expenses route', () => {
   describe('GET /api/expenses with pagination', () => {
     it('should return paginated expenses', async () => {
       await expenseSchema.create([
-        { title: 'Expense 1', montant: 50, username: 'omar' },
-        { title: 'Expense 2', montant: 150, username: 'omar' },
-        { title: 'Expense 3', montant: 250, username: 'omar' },
-        { title: 'Expense 4', montant: 350, username: 'omar' }
+        { title: 'Expense 1', montant: 50, username: TEST_VALID_USERNAME },
+        { title: 'Expense 2', montant: 150, username: TEST_VALID_USERNAME },
+        { title: 'Expense 3', montant: 250, username: TEST_VALID_USERNAME },
+        { title: 'Expense 4', montant: 350, username: TEST_VALID_USERNAME }
       ]);
 
       const response = await request(server)
         .get('/api/expenses?limit=2&page=2')
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
         console.log(response.body)
       expect(response.status).toBe(200);
@@ -127,17 +124,17 @@ describe('expenses route', () => {
   describe('GET /api/expenses with pagination', () => {
     it('should ingnore paginattion andt limit whene filter existe(gt=150) ', async () => {
       await expenseSchema.create([
-        { title: 'Expense 1', montant: 50, username: 'omar' },
-        { title: 'Expense 2', montant: 150, username: 'omar' },
-        { title: 'Expense 3', montant: 200, username: 'omar' },
-        { title: 'Expense 4', montant: 250, username: 'omar' },
-        { title: 'Expense 5', montant: 300, username: 'omar' },
-        { title: 'Expense 6', montant: 350, username: 'omar' }
+        { title: 'Expense 1', montant: 50, username: TEST_VALID_USERNAME },
+        { title: 'Expense 2', montant: 150, username: TEST_VALID_USERNAME },
+        { title: 'Expense 3', montant: 200, username: TEST_VALID_USERNAME },
+        { title: 'Expense 4', montant: 250, username: TEST_VALID_USERNAME },
+        { title: 'Expense 5', montant: 300, username: TEST_VALID_USERNAME },
+        { title: 'Expense 6', montant: 350, username: TEST_VALID_USERNAME }
       ]);
 
       const response = await request(server)
         .get('/api/expenses?limit=2&page=2&gt=150')
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(4);
@@ -156,7 +153,7 @@ describe('expenses route', () => {
         .send({
           montant: 1000,
         })
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       // put data to expenses before add new one
       await request(server)
@@ -165,12 +162,12 @@ describe('expenses route', () => {
           title: 'Expense',
           montant: 150,
         })
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       // finance state before add new expense 
       const getFinanceResponse = await request(server)
         .get(`/api/finances`)
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       expect(getFinanceResponse.body.data[0]).toEqual(
         {
@@ -190,7 +187,7 @@ describe('expenses route', () => {
           title: 'new Expense',
           montant: 50,
         })
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       expect(postExpenseRespose.status).toBe(201);
       expect(postExpenseRespose.body.message).toEqual('expense created and finance updated');
@@ -198,7 +195,7 @@ describe('expenses route', () => {
       // finance state after one expense is added
       const getFinanceResponseAfterExpenseAdded = await request(server)
         .get(`/api/finances`)
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       expect(getFinanceResponseAfterExpenseAdded.status).toBe(200);
       expect(getFinanceResponseAfterExpenseAdded.body.data[0]).toEqual(
@@ -220,7 +217,7 @@ describe('expenses route', () => {
         .send({
           montant: 150,
         })
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       expect(response.status).toBe(400);
       expect(response.body.message).toContain('`title` is required');
@@ -233,7 +230,7 @@ describe('expenses route', () => {
         .send({
           title: 'New Expense',
         })
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       expect(response.status).toBe(400);
       expect(response.body.message).toContain('`montant` is required');
@@ -252,12 +249,12 @@ describe('expenses route', () => {
         .send({
           montant: 1000,
         })
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       // put some data to expenses before delete one
       await request(server)
         .post(`/api/expense`)
-        .set('Authorization', `Bearer ${validToken}`)
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`)
         .send({
           title: 'Expense1 to delete',
           montant: 60,
@@ -265,7 +262,7 @@ describe('expenses route', () => {
 
       await request(server)
         .post(`/api/expense`)
-        .set('Authorization', `Bearer ${validToken}`)
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`)
         .send({
           title: 'Expense2 to delete',
           montant: 40,
@@ -275,7 +272,7 @@ describe('expenses route', () => {
       // finance state before delete expense 
       const getFinanceResponse = await request(server)
         .get(`/api/finances`)
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       expect(getFinanceResponse.status).toBe(200);
       expect(getFinanceResponse.body.data[0]).toEqual(
@@ -292,13 +289,13 @@ describe('expenses route', () => {
       // get expenses data to get id for deleting one after
       const getExpensesResponse = await request(server)
         .get(`/api/expenses`)
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
       const expenseId = getExpensesResponse.body.data[0]._id // the expense id to delete
 
       // deleting one expenses 
       const deleteExpensesResponse = await request(server)
         .delete(`/api/expenses/${expenseId}`)
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       expect(deleteExpensesResponse.status).toBe(200);
       expect(deleteExpensesResponse.body.message).toEqual(`expense for id ${expenseId} deleted and finance updated`);
@@ -308,7 +305,7 @@ describe('expenses route', () => {
       // finance state after one expense is deleted
       const getFinanceResponseAfterExpenseDeleted = await request(server)
         .get(`/api/finances`)
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       expect(getFinanceResponseAfterExpenseDeleted.status).toBe(200);
       expect(getFinanceResponseAfterExpenseDeleted.body.data[0]).toEqual(
@@ -327,12 +324,12 @@ describe('expenses route', () => {
       const expense = await expenseSchema.create({
         title: 'Expense to delete',
         montant: 50,
-        username: 'omar'
+        username: TEST_VALID_USERNAME
       });
 
       const response = await request(server)
         .delete(`/api/expenses/10`)
-        .set('Authorization', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
       expect(response.status).toBe(400);
       expect(response.body.message).toEqual(`id unknown 10`);

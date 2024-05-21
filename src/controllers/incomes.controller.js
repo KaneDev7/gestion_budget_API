@@ -115,9 +115,10 @@ const deleteIncomes = async (req, res) => {
         return res.status(400).json(errorResponse.toJSON())
     }
 
+
     try {
-        await incomeShema.findOneAndDelete({ username })
-        await updateFinanceAfterIncomeChanged()
+        await incomeShema.findByIdAndDelete({ _id : id })
+        await updateFinanceAfterIncomeChanged(username)
 
         const message = `income for id ${id} deleted and finance updated`
         const successResponse = APIResponse.success({}, message)

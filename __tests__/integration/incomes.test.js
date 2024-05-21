@@ -4,11 +4,9 @@ const incomeSchema = require('../../src/models/incomes.model');
 const financeSchema = require('../../src/models/finance.model');
 const budgetSchema = require('../../src/models/budget.model');
 const mongoDbMemory = require('../../configs/dbMemo')
-
-const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im9tYXIiLCJpYXQiOjE3MTU5NzA0ODEsImV4cCI6MTcyNjc5NzA0ODF9.f1Av4amrPrz9Uh0-ytsW9DVICULWWUKUseE9egscl0I';
-const invalidToken = '12354';
-
 let server = require('../../src/app');
+const { TEST_VALID_TOKEN, TEST_VALID_USERNAME } = require('../../src/constants/constants');
+const invalidToken = '12354';
 
 describe('incomes route', () => {
 
@@ -18,8 +16,8 @@ describe('incomes route', () => {
 
     beforeEach(async () => {
         // the token contains omar as username
-        await budgetSchema.create({ username: 'omar', montant: 0 });
-        await financeSchema.create({ username: 'omar', totalExpense: 0, totalIncome: 0, solde: 0, budget: 0 });
+        await budgetSchema.create({ username: TEST_VALID_USERNAME, montant: 0 });
+        await financeSchema.create({ username: TEST_VALID_USERNAME, totalExpense: 0, totalIncome: 0, solde: 0, budget: 0 });
     });
 
     afterEach(async () => {
@@ -42,11 +40,11 @@ describe('incomes route', () => {
                     title: 'Test Income',
                     montant: 100,
                 })
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             const getResponse = await request(server)
                 .get('/api/incomes')
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(getResponse.status).toBe(200);
             expect(getResponse.body.data).toEqual([
@@ -80,14 +78,14 @@ describe('incomes route', () => {
     describe('GET /api/incomes with filters', () => {
         it('should return filtered incomes by montant', async () => {
             await incomeSchema.create([
-                { title: 'Income 1', montant: 50, username: 'omar' },
-                { title: 'Income 2', montant: 150, username: 'omar' },
-                { title: 'Income 3', montant: 250, username: 'omar' }
+                { title: 'Income 1', montant: 50, username: TEST_VALID_USERNAME },
+                { title: 'Income 2', montant: 150, username: TEST_VALID_USERNAME },
+                { title: 'Income 3', montant: 250, username: TEST_VALID_USERNAME }
             ]);
 
             const response = await request(server)
                 .get('/api/incomes?gt=100')
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(response.status).toBe(200);
             expect(response.body.data.length).toBe(2);
@@ -99,15 +97,15 @@ describe('incomes route', () => {
     describe('GET /api/incomes with pagination', () => {
         it('should return paginated incomes', async () => {
             await incomeSchema.create([
-                { title: 'Income 1', montant: 50, username: 'omar' },
-                { title: 'Income 2', montant: 150, username: 'omar' },
-                { title: 'Income 3', montant: 250, username: 'omar' },
-                { title: 'Income 4', montant: 350, username: 'omar' }
+                { title: 'Income 1', montant: 50, username: TEST_VALID_USERNAME },
+                { title: 'Income 2', montant: 150, username: TEST_VALID_USERNAME },
+                { title: 'Income 3', montant: 250, username: TEST_VALID_USERNAME },
+                { title: 'Income 4', montant: 350, username: TEST_VALID_USERNAME }
             ]);
 
             const response = await request(server)
                 .get('/api/incomes?limit=2&page=2')
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(response.status).toBe(200);
             expect(response.body.data.length).toBe(2);
@@ -117,17 +115,17 @@ describe('incomes route', () => {
     describe('GET /api/incomes with pagination and filter', () => {
         it('should ignore pagination and limit when filter exists (gt=150)', async () => {
             await incomeSchema.create([
-                { title: 'Income 1', montant: 50, username: 'omar' },
-                { title: 'Income 2', montant: 150, username: 'omar' },
-                { title: 'Income 3', montant: 200, username: 'omar' },
-                { title: 'Income 4', montant: 250, username: 'omar' },
-                { title: 'Income 5', montant: 300, username: 'omar' },
-                { title: 'Income 6', montant: 350, username: 'omar' }
+                { title: 'Income 1', montant: 50, username: TEST_VALID_USERNAME },
+                { title: 'Income 2', montant: 150, username: TEST_VALID_USERNAME },
+                { title: 'Income 3', montant: 200, username: TEST_VALID_USERNAME },
+                { title: 'Income 4', montant: 250, username: TEST_VALID_USERNAME },
+                { title: 'Income 5', montant: 300, username: TEST_VALID_USERNAME },
+                { title: 'Income 6', montant: 350, username: TEST_VALID_USERNAME }
             ]);
 
             const response = await request(server)
                 .get('/api/incomes?limit=2&page=2&gt=150')
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
                 console.log('responseIncome', response.body)
             expect(response.status).toBe(200);
@@ -145,7 +143,7 @@ describe('incomes route', () => {
                 .send({
                     montant: 1000,
                 })
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             // add income before adding new one
             await request(server)
@@ -154,12 +152,12 @@ describe('incomes route', () => {
                     title: 'Income',
                     montant: 150,
                 })
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             // finance state before adding new income
             const getFinanceResponse = await request(server)
                 .get('/api/finances')
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(getFinanceResponse.body.data[0]).toEqual({
                 budget: 1000,
@@ -177,7 +175,7 @@ describe('incomes route', () => {
                     title: 'new Income',
                     montant: 50,
                 })
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(postIncomeResponse.status).toBe(201);
             expect(postIncomeResponse.body.message).toEqual('income created and finance updated');
@@ -185,7 +183,7 @@ describe('incomes route', () => {
             // finance state after one income is added
             const getFinanceResponseAfterIncomeAdded = await request(server)
                 .get('/api/finances')
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(getFinanceResponseAfterIncomeAdded.status).toBe(200);
             expect(getFinanceResponseAfterIncomeAdded.body.data[0]).toEqual({
@@ -204,7 +202,7 @@ describe('incomes route', () => {
                 .send({
                     montant: 150,
                 })
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toContain('`title` is required');
@@ -216,7 +214,7 @@ describe('incomes route', () => {
                 .send({
                     title: 'New Income',
                 })
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toContain('`montant` is required');
@@ -233,12 +231,12 @@ describe('incomes route', () => {
                 .send({
                     montant: 1000,
                 })
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             // put some data to incomes before delete one
             await request(server)
                 .post(`/api/income`)
-                .set('Authorization', `Bearer ${validToken}`)
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`)
                 .send({
                     title: 'Income1 to delete',
                     montant: 60,
@@ -246,7 +244,7 @@ describe('incomes route', () => {
 
             await request(server)
                 .post(`/api/income`)
-                .set('Authorization', `Bearer ${validToken}`)
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`)
                 .send({
                     title: 'Income2 to delete',
                     montant: 40,
@@ -255,7 +253,7 @@ describe('incomes route', () => {
             // finance state before delete income 
             const getFinanceResponse = await request(server)
                 .get('/api/finances')
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(getFinanceResponse.status).toBe(200);
             expect(getFinanceResponse.body.data[0]).toEqual({
@@ -270,13 +268,13 @@ describe('incomes route', () => {
             // get incomes data to get id for deleting one after
             const getIncomesResponse = await request(server)
                 .get('/api/incomes')
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
             const incomeId = getIncomesResponse.body.data[0]._id; // the income id to delete
 
             // deleting one income 
             const deleteIncomeResponse = await request(server)
                 .delete(`/api/incomes/${incomeId}`)
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(deleteIncomeResponse.status).toBe(200);
             expect(deleteIncomeResponse.body.message).toEqual(`income for id ${incomeId} deleted and finance updated`);
@@ -286,14 +284,14 @@ describe('incomes route', () => {
             // finance state after one income is deleted
             const getFinanceResponseAfterIncomeDeleted = await request(server)
                 .get('/api/finances')
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(getFinanceResponseAfterIncomeDeleted.status).toBe(200);
             expect(getFinanceResponseAfterIncomeDeleted.body.data[0]).toEqual({
                 budget: 1000,
                 totalExpense: 0,
-                totalIncome: 100, // 60 + 40
-                solde: 1100, // 1000 + (100 - 0)
+                totalIncome: 40, // 60 - 40
+                solde: 1040, // 1000 + (60 - 0)
                 createdAt: expect.anything(),
                 __v: 0
             });
@@ -303,12 +301,12 @@ describe('incomes route', () => {
             const income = await incomeSchema.create({
                 title: 'Income to delete',
                 montant: 50,
-                username: 'omar'
+                username: TEST_VALID_USERNAME
             });
 
             const response = await request(server)
                 .delete(`/api/incomes/10`)
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toEqual(`id unknown 10`);

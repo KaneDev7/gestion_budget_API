@@ -5,8 +5,7 @@ const userSchema = require('../../src/models/users.model');
 const tokenSchema = require('../../src/models/token.model');
 const mongoDbMemory = require('../../configs/dbMemo');
 const server = require('../../src/app');
-
-const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im9tYXIiLCJpYXQiOjE3MTU5NzA0ODEsImV4cCI6MTcyNjc5NzA0ODF9.f1Av4amrPrz9Uh0-ytsW9DVICULWWUKUseE9egscl0I';
+const { TEST_VALID_TOKEN, TEST_VALID_USERNAME } = require('../../src/constants/constants');
 const invalidToken = '12354';
 
 describe('Token management', () => {
@@ -19,7 +18,7 @@ describe('Token management', () => {
     });
 
     beforeEach(async () => {
-        await userSchema.create({ username: 'omar', password: 'hashed_password', token: validToken });
+        await userSchema.create({ username: TEST_VALID_USERNAME, password: 'hashed_password', token: TEST_VALID_TOKEN });
     });
 
     afterEach(async () => {
@@ -34,13 +33,13 @@ describe('Token management', () => {
         it('should generate a new token successfully', async () => {
             const response = await request(server)
                 .get('/api/token/new')
-                .set('Authorization', `Bearer ${validToken}`)
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`)
 
             expect(response.status).toBe(200);
             expect(response.body.message).toEqual('New token is generated');
             expect(response.body.data).toHaveProperty('token');
 
-            const updatedUser = await userSchema.findOne({ username: 'omar' });
+            const updatedUser = await userSchema.findOne({ username: TEST_VALID_USERNAME });
             expect(updatedUser.token).toEqual(response.body.data.token);
 
             const tokenInCookies = response.headers['set-cookie'][0];
@@ -74,10 +73,10 @@ describe('Token management', () => {
         it('should get the current token successfully', async () => {
             const response = await request(server)
                 .get('/api/token')
-                .set('Authorization', `Bearer ${validToken}`)
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`)
 
             expect(response.status).toBe(201);
-            expect(response.body.data).toHaveProperty('token', validToken);
+            expect(response.body.data).toHaveProperty('token', TEST_VALID_TOKEN);
         });
 
 
@@ -98,7 +97,7 @@ describe('Token management', () => {
 
             const response = await request(server)
                 .get('/api/token')
-                .set('Authorization', `Bearer ${validToken}`)
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`)
 
             expect(response.status).toBe(500);
             expect(response.body.message).toContain('Something went wrong: Database error');

@@ -2,9 +2,7 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const mongoDbMemory = require('../../configs/dbMemo');
 const server = require('../../src/app');
-
-
-const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im9tYXIiLCJpYXQiOjE3MTU5NzA0ODEsImV4cCI6MTcyNjc5NzA0ODF9.f1Av4amrPrz9Uh0-ytsW9DVICULWWUKUseE9egscl0I';
+const { TEST_VALID_TOKEN } = require('../../src/constants/constants');
 const invalidToken = '12354';
 
 describe('User Logout', () => {
@@ -20,7 +18,7 @@ describe('User Logout', () => {
         it('should logout the user successfully', async () => {
             const response = await request(server)
                 .get('/api/logout')
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(response.status).toBe(200);
             expect(response.body.message).toBe('user deconeted');

@@ -6,11 +6,10 @@ const financeSchema = require('../../src/models/finance.model')
 const budgetSchema = require('../../src/models/budget.model')
 const mongoDbMemory = require('../../configs/dbMemo');
 const bcrypt = require('bcrypt')
-
 const server = require('../../src/app');
+const { TEST_VALID_TOKEN, TEST_VALID_USERNAME } = require('../../src/constants/constants')
 
-const validUser = { username: 'omar', password: 'testPassword' };
-const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im9tYXIiLCJpYXQiOjE3MTU5NzA0ODEsImV4cCI6MTcyNjc5NzA0ODF9.f1Av4amrPrz9Uh0-ytsW9DVICULWWUKUseE9egscl0I';
+const validUser = { username: TEST_VALID_USERNAME, password: 'testPassword' };
 const invalidToken = '12354';
 
 describe('User Management', () => {
@@ -24,7 +23,7 @@ describe('User Management', () => {
 
     beforeEach(async () => {
         jest.clearAllMocks()
-        // await userSchema.create({ username: 'omar', password: 'hashed_password' });
+        // await userSchema.create({ username: TEST_VALID_USERNAME, password: 'hashed_password' });
     });
 
     afterEach(async () => {
@@ -49,7 +48,7 @@ describe('User Management', () => {
             // login should be successfull
             const userWithCorrectPasswordResponse = await request(server)
                 .post('/api/login')
-                .send({ username: 'omar', password: 'testPassword' });
+                .send({ username: TEST_VALID_USERNAME, password: 'testPassword' });
 
             expect(userWithCorrectPasswordResponse.status).toBe(200);
             expect(userWithCorrectPasswordResponse.body.message).toBe('connected');
@@ -64,7 +63,7 @@ describe('User Management', () => {
             const response = await request(server)
                 .patch('/api/user/edit/password')
                 .send({ newPassword, currentPassword }) // current password is require to edit the password
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(response.status).toBe(201);
             expect(response.body.message).toBe('your password is changed');
@@ -72,7 +71,7 @@ describe('User Management', () => {
             // login should be wrong because the password is changed
             const userWithOldPasswordResponse = await request(server)
                 .post('/api/login')
-                .send({ username: 'omar', password: 'testPassword' });
+                .send({ username: TEST_VALID_USERNAME, password: 'testPassword' });
 
             expect(userWithOldPasswordResponse.status).toBe(401);
             expect(userWithOldPasswordResponse.body.message).toContain('incorrect username or password');
@@ -102,7 +101,7 @@ describe('User Management', () => {
             const response = await request(server)
                 .patch('/api/user/edit/password')
                 .send({ newPassword: 'new_password' })
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(response.status).toBe(500);
             expect(response.body.message).toBe(`Something went wrong: ${errorMessage}`);
@@ -124,7 +123,7 @@ describe('User Management', () => {
             // lest check the budget model 
             const financeResponse = await request(server)
                 .get('/api/finances')
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(financeResponse.status).toBe(200);
             expect(financeResponse.body.data[0]).toEqual({
@@ -138,24 +137,24 @@ describe('User Management', () => {
 
             const response = await request(server)
                 .delete('/api/user')
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(response.status).toBe(200);
             expect(response.body.message).toBe('Your acount is deleted');
 
-            const user = await userSchema.findOne({ username: 'omar' });
+            const user = await userSchema.findOne({ username: TEST_VALID_USERNAME });
             expect(user).toBeNull();
 
-            const expenses = await expenseSchema.find({ username: 'omar' });
+            const expenses = await expenseSchema.find({ username: TEST_VALID_USERNAME });
             expect(expenses.length).toBe(0);
 
-            const incomes = await incomeSchema.find({ username: 'omar' });
+            const incomes = await incomeSchema.find({ username: TEST_VALID_USERNAME });
             expect(incomes.length).toBe(0);
 
-            const finances = await financeSchema.find({ username: 'omar' });
+            const finances = await financeSchema.find({ username: TEST_VALID_USERNAME });
             expect(finances.length).toBe(0);
 
-            const budgets = await budgetSchema.find({ username: 'omar' });
+            const budgets = await budgetSchema.find({ username: TEST_VALID_USERNAME });
             expect(budgets.length).toBe(0);
         });
 
@@ -167,7 +166,7 @@ describe('User Management', () => {
 
             const response = await request(server)
                 .delete('/api/user')
-                .set('Authorization', `Bearer ${validToken}`);
+                .set('Authorization', `Bearer ${TEST_VALID_TOKEN}`);
 
             expect(response.status).toBe(500);
             expect(response.body.message).toBe(`Something went wrong: ${errorMessage}`);
