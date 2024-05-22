@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Ce service d'API permet de gérer les utilisateurs, l'authentification, et les budgets personnels, y compris les dépenses, les revenus, et les finances. Les utilisateurs peuvent créer un compte, se connecter, générer un nouveau token (invalider l’ancien token), récupérer leur token, changer leur mot de passe, se déconnecter, et supprimer leur compte. Ils peuvent également gérer leur budget en ajoutant ou mettant à jour le budget de départ, en ajoutant ou supprimant des dépenses ou des revenus, et en récupérant les données financières.
+Ce service d'API permet de gérer les utilisateurs, l'authentification, et les budgets personnels, y compris les dépenses, les revenus, et les finances. Les utilisateurs peuvent créer un compte, se connecter, générer un nouveau token (invalider l’ancien token), récupérer leur token, changer leur mot de passe, se déconnecter, et supprimer leur compte. Ils peuvent également gérer leur budget en ajoutant ou mettant à jour le budget de départ, en ajoutant ou supprimant des dépenses ou des revenus, et en récupérant les données financières(Budget, Dépenses totales et Solde).
 
 Pour accéder aux endpoints sécurisés, les utilisateurs doivent s'inscrire pour obtenir un token. Chaque utilisateur récupérera ses propres données en fonction de son token. Si un nouveau token est généré, l'ancien n'est plus valable.
 
