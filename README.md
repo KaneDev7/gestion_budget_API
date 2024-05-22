@@ -44,6 +44,8 @@ Pour démarrer le serveur, exécutez :
 npm start
 ```
 
+## URL de base 
+https://gestion-budget-api.onrender.com
 
 ## Authentification
 
@@ -163,6 +165,43 @@ npm start
 ### Supprimer son compte
 - **Endpoint:** `DELETE /api/user`
 - **Autorization:** `Bearer {token}`
+
+
+#### Exemple pour récuperer ses dépenses
+
+```javascript
+const TOKEN = 'valid_token'
+fetch(`https://gestion-budget-api.onrender.com/api/expenses`, {
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${TOKEN}`
+    }
+})
+
+    .then((result) => result.json())
+    .then(data => {
+        console.log(data)
+    })
+```
+
+#### Exemple pour ajouter une dépense
+
+```javascript
+const TOKEN = 'valid_token'
+fetch(`https://gestion-budget-api.onrender.com/api/expense`, {
+    method: 'POST',
+    body: JSON.stringify({ title: 'expense title', montant: 1000 }),
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${TOKEN}`
+    }
+})
+
+    .then((result) => result.json())
+    .then(data => {
+        console.log(data)
+    })
+```
 
 ### Dépendances
 
