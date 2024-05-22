@@ -33,7 +33,6 @@ Assurez-vous d'envoyer les données en format JSON dans le corps des requêtes e
    ```
    JWT_SECRET=votre_jwt_secret
    SALT_ROUNDS=10
-   INVALID_TOKEN_TIME=3600
    MONGODB_URI=votre_mongodb_uri
    ```
 
