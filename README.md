@@ -32,7 +32,6 @@ Assurez-vous d'envoyer les données en format JSON dans le corps des requêtes e
 1. Créez un fichier `.env` à la racine du projet et ajoutez les variables d'environnement suivantes :
    ```
    JWT_SECRET=votre_jwt_secret
-   SALT_ROUNDS=10
    MONGODB_URI=votre_mongodb_uri
    ```
 
