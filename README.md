@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Ce service d'API permet de gérer les utilisateurs, l'authentification, et les budgets personnels, y compris les dépenses, les revenus, et les finances. Les utilisateurs peuvent créer un compte, se connecter, générer un nouveau token (invalider l’ancien token), récupérer leur token, changer leur mot de passe, se déconnecter, et supprimer leur compte. Ils peuvent également gérer leur budget en ajoutant ou mettant à jour le budget de départ, en ajoutant ou supprimant des dépenses ou des revenus, et en récupérant les données financières.
+Ce service d'API permet de gérer les utilisateurs, l'authentification, et les budgets personnels, y compris les dépenses, les revenus, et les finances. Les utilisateurs peuvent créer un compte, se connecter, générer un nouveau token (invalider l’ancien token), récupérer leur token, changer leur mot de passe, se déconnecter, et supprimer leur compte. Ils peuvent également gérer leur budget en ajoutant ou mettant à jour le budget de départ, en ajoutant ou supprimant des dépenses ou des revenus, et en récupérant les données financières (Budget, Dépenses totales et Solde).
 
 Pour accéder aux endpoints sécurisés, les utilisateurs doivent s'inscrire pour obtenir un token. Chaque utilisateur récupérera ses propres données en fonction de son token. Si un nouveau token est généré, l'ancien n'est plus valable.
 
@@ -32,8 +32,6 @@ Assurez-vous d'envoyer les données en format JSON dans le corps des requêtes e
 1. Créez un fichier `.env` à la racine du projet et ajoutez les variables d'environnement suivantes :
    ```
    JWT_SECRET=votre_jwt_secret
-   SALT_ROUNDS=10
-   INVALID_TOKEN_TIME=3600
    MONGODB_URI=votre_mongodb_uri
    ```
 
@@ -209,5 +207,9 @@ fetch(`https://gestion-budget-api.onrender.com/api/expense`, {
 - Mongoose
 - bcrypt
 - jsonwebtoken
+- cookie-parser
+- body-parser
+- cors
+- mongodb-memory-server
 - Supertest
 - Jest

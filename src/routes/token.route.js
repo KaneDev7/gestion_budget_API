@@ -4,8 +4,8 @@ const {generateNewToken, getToken} = require('../controllers/auth/token.controll
 
 const router = express.Router()
 
-router.get('/api/token',  getToken )
-router.get('/api/token/new', generateNewToken )
+router.get('/api/token',  getToken)
+router.get('/api/token/new', generateNewToken)
 
 
 module.exports = router

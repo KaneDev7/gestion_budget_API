@@ -8,6 +8,6 @@ const router = express.Router()
 
 router.post('/api/auth', validateUserDataRegister, checkUsernameInDb, createUser )
 router.post('/api/login',validateUserDataLogin, checkPassword, connectUser )
-router.get('/api/logout', logout )
+router.get('/api/logout', logout)
 
 module.exports = router
