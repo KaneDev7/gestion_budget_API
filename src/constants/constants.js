@@ -2,7 +2,7 @@
 const SALT_ROUNDS = 10
 const INVALID_TOKEN_TIME = 6 * 30 * 24 * 60 * 60 * 1000 // 6 months
 const TOEKN_ID = 'token_id'
-const PAGE_LIMIT = 5
+const PAGE_LIMIT = 50
 
 // test
 const TEST_VALID_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im9tYXIiLCJpYXQiOjE3MTU5NzA0ODEsImV4cCI6MTcyNjc5NzA0ODF9.f1Av4amrPrz9Uh0-ytsW9DVICULWWUKUseE9egscl0I';

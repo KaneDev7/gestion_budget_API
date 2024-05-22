@@ -10,8 +10,6 @@ Assurez-vous d'envoyer les données en format JSON dans le corps des requêtes e
 
 
 
-
-
 ### Installation
 
 1. Clonez le dépôt :
