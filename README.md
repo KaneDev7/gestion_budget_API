@@ -209,5 +209,9 @@ fetch(`https://gestion-budget-api.onrender.com/api/expense`, {
 - Mongoose
 - bcrypt
 - jsonwebtoken
+- cookie-parser
+- body-parser
+- cors
+- mongodb-memory-server
 - Supertest
 - Jest
