@@ -10,6 +10,7 @@ const createBudget = async (req, res) => {
     const { montant } = req.body
     const { username } = req.user 
 
+    console.log('username', username)
     if (!montant) {
         const message = `montant can't be empty`
         const errorResponse = APIResponse.error({}, message)

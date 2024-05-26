@@ -53,6 +53,7 @@ const findExpensesByFilterAndSort = async ({ limit, page, gt, lt, sort }, userna
 const updateFinanceAfterExpensesChanged = async (username) => {
     if (!username) return
     const budget = await budgetSchema.findOne({ username })
+    console.log('budget', username)
     const totalExpense = await getTotalExpense(username)
     const totalIncome = await getTotalIncomes(username)
     const solde = (budget.montant - totalExpense) + (totalIncome - totalExpense)
