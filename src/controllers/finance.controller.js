@@ -4,7 +4,6 @@ const APIResponse = require('../utils/APIResponse')
 
 const getFinances = async (req, res) => {
     const { username } = req.user
-    console.log('username', username)
 
     try {
 
